@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		AE8A87051DA1C854005E2365 /* KKSpeechRecognizerBridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = AE8A87041DA1C854005E2365 /* KKSpeechRecognizerBridge.mm */; };
 		AE8A87081DA1CA5C005E2365 /* Speech.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE8A87071DA1CA5C005E2365 /* Speech.framework */; };
+		AE8A870C1DA24F87005E2365 /* UnitySpeechRecognizerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AE8A870B1DA24F87005E2365 /* UnitySpeechRecognizerDelegate.m */; };
 		AEDD8D3D1DA1BFD600106635 /* KKSpeechRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = AEDD8D3C1DA1BFD600106635 /* KKSpeechRecognizer.m */; };
 		AEDD8D3E1DA1BFD600106635 /* KKSpeechRecognizer.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = AEDD8D3B1DA1BFD600106635 /* KKSpeechRecognizer.h */; };
 /* End PBXBuildFile section */
@@ -29,6 +30,8 @@
 /* Begin PBXFileReference section */
 		AE8A87041DA1C854005E2365 /* KKSpeechRecognizerBridge.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = KKSpeechRecognizerBridge.mm; sourceTree = "<group>"; };
 		AE8A87071DA1CA5C005E2365 /* Speech.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Speech.framework; path = System/Library/Frameworks/Speech.framework; sourceTree = SDKROOT; };
+		AE8A870A1DA24F87005E2365 /* UnitySpeechRecognizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnitySpeechRecognizerDelegate.h; sourceTree = "<group>"; };
+		AE8A870B1DA24F87005E2365 /* UnitySpeechRecognizerDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UnitySpeechRecognizerDelegate.m; sourceTree = "<group>"; };
 		AEDD8D381DA1BFD600106635 /* libSpeechRecognizer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSpeechRecognizer.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		AEDD8D3B1DA1BFD600106635 /* KKSpeechRecognizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KKSpeechRecognizer.h; sourceTree = "<group>"; };
 		AEDD8D3C1DA1BFD600106635 /* KKSpeechRecognizer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KKSpeechRecognizer.m; sourceTree = "<group>"; };
@@ -77,6 +80,8 @@
 				AEDD8D3B1DA1BFD600106635 /* KKSpeechRecognizer.h */,
 				AEDD8D3C1DA1BFD600106635 /* KKSpeechRecognizer.m */,
 				AE8A87041DA1C854005E2365 /* KKSpeechRecognizerBridge.mm */,
+				AE8A870A1DA24F87005E2365 /* UnitySpeechRecognizerDelegate.h */,
+				AE8A870B1DA24F87005E2365 /* UnitySpeechRecognizerDelegate.m */,
 			);
 			path = SpeechRecognizer;
 			sourceTree = "<group>";
@@ -140,6 +145,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AE8A870C1DA24F87005E2365 /* UnitySpeechRecognizerDelegate.m in Sources */,
 				AEDD8D3D1DA1BFD600106635 /* KKSpeechRecognizer.m in Sources */,
 				AE8A87051DA1C854005E2365 /* KKSpeechRecognizerBridge.mm in Sources */,
 			);

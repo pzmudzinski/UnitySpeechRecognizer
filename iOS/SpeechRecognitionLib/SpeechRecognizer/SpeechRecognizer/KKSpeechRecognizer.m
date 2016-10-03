@@ -138,7 +138,7 @@
     _recognitionTask = nil;
 }
 
-- (void)cancelIfRecording {
+- (void)stopIfRecording {
     if (_audioEngine.isRunning) {
         [self stopRecording];
     }

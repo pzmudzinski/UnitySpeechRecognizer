@@ -13,11 +13,11 @@
 @class KKSpeechRecognizer;
 @protocol KKSpeechRecognizerDelegate<NSObject>
 
-- speechRecognizer:(KKSpeechRecognizer *)recognizer availabilityDidChange:(BOOL)available;
-- speechRecognizer:(KKSpeechRecognizer *)recognizer failedToStartRecordingWithReason:(NSString*)reason;
-- speechRecognizer:(KKSpeechRecognizer *)recognizer failedDuringRecordingWithReason:(NSString*)reason;
-- speechRecognizer:(KKSpeechRecognizer *)recognizer gotPartialResult:(NSString*)result;
-- speechRecognizer:(KKSpeechRecognizer *)recognizer gotFinalResult:(NSString*)result;
+- (void)speechRecognizer:(KKSpeechRecognizer *)recognizer availabilityDidChange:(BOOL)available;
+- (void)speechRecognizer:(KKSpeechRecognizer *)recognizer failedToStartRecordingWithReason:(NSString*)reason;
+- (void)speechRecognizer:(KKSpeechRecognizer *)recognizer failedDuringRecordingWithReason:(NSString*)reason;
+- (void)speechRecognizer:(KKSpeechRecognizer *)recognizer gotPartialResult:(NSString*)result;
+- (void)speechRecognizer:(KKSpeechRecognizer *)recognizer gotFinalResult:(NSString*)result;
 
 @end
 
@@ -41,6 +41,18 @@ KKSpeechRecognitionAuthorizationStatus KKSpeechRecognitionAuthorizationStatusFro
     }
 }
 
+NSString *StringFromKKSpeechRecognitionAuthorizationStatus(KKSpeechRecognitionAuthorizationStatus status) {
+    switch (status) {
+        case KKSpeechRecognitionAuthorizationStatusDenied:
+            return @"denied";
+        case KKSpeechRecognitionAuthorizationStatusAuthorized:
+            return @"authorized";
+        case KKSpeechRecognitionAuthorizationStatusRestricted:
+            return @"restricted";
+        case KKSpeechRecognitionAuthorizationStatusNotDetermined:
+            return @"notDetermined";
+    }
+}
 
 
 typedef void (^AuthCallback)(KKSpeechRecognitionAuthorizationStatus);
@@ -60,7 +72,7 @@ typedef void (^AuthCallback)(KKSpeechRecognitionAuthorizationStatus);
 
 - (void)requestAuthorization:(AuthCallback)callback;
 - (void)startRecording:(BOOL)collectPartialResults;
-- (void)cancelIfRecording;
+- (void)stopIfRecording;
 
 
 @end
