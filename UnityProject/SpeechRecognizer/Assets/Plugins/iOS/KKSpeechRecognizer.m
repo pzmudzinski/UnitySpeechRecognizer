@@ -31,7 +31,6 @@
 - (id)init {
     if (self = [super init]) {
         _internalRecognizer = [SFSpeechRecognizer new];
-        _audioEngine = [AVAudioEngine new];
     }
     return self;
 }
@@ -39,7 +38,6 @@
 - (id)initWithLocale:(NSLocale *)locale {
     if (self = [super init]) {
         _internalRecognizer = [[SFSpeechRecognizer alloc] initWithLocale:locale];
-        _audioEngine = [AVAudioEngine new];
     }
     return self;
 }
