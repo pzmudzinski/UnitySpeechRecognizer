@@ -27,10 +27,12 @@ namespace KKSpeech {
 		}
 
 		public static void StopIfRecording() {
+			Debug.Log("StopRecording...");
 			iOSSpeechRecognizer._StopIfRecording();
 		}
 
 		public static void StartRecording(bool shouldCollectionPartialResults) {
+			Debug.Log("StartRecording...");
 			iOSSpeechRecognizer._StartRecording(shouldCollectionPartialResults);
 		}
 

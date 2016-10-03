@@ -9,9 +9,6 @@ public class RecordingCanvas : MonoBehaviour {
 	public Text resultText;
 
 	void Start() {
-		startRecordingButton.enabled = false;
-		SpeechRecognizer.RequestAccess();
-
 		KKSpeechRecognizerListener listener = GameObject.FindObjectOfType<KKSpeechRecognizerListener>();
 		listener.onAuthorizationStatusFetched.AddListener(OnAuthorizationStatusFetched);
 		listener.onAvailabilityChanged.AddListener(OnAvailabilityChange);
@@ -19,6 +16,8 @@ public class RecordingCanvas : MonoBehaviour {
 		listener.onErrorOnStartRecording.AddListener(OnError);
 		listener.onFinalResults.AddListener(OnFinalResult);
 		listener.onPartialResults.AddListener(OnPartialResult);
+		startRecordingButton.enabled = false;
+		SpeechRecognizer.RequestAccess();
 	}
 
 	public void OnFinalResult(string result) {
@@ -51,10 +50,10 @@ public class RecordingCanvas : MonoBehaviour {
 	public void OnStartRecordingPressed() {
 		if (SpeechRecognizer.IsRecording()) {
 			SpeechRecognizer.StopIfRecording();
-			startRecordingButton.GetComponent<Text>().text = "Start Recording";
+			startRecordingButton.GetComponentInChildren<Text>().text = "Start Recording";
 		} else {
 			SpeechRecognizer.StartRecording(true);
-			startRecordingButton.GetComponent<Text>().text = "Stop Recording";
+			startRecordingButton.GetComponentInChildren<Text>().text = "Stop Recording";
 		}
 	}
 }

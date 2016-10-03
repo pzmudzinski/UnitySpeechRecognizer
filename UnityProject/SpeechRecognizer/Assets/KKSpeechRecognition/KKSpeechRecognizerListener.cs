@@ -25,27 +25,32 @@ public class KKSpeechRecognizerListener : MonoBehaviour {
 	public ErrorCallback onErrorOnStartRecording = new ErrorCallback();
 
 	void AvailabilityDidChange(string available) {
+		Debug.Log("AvailabilityDidChange" + available);
 		onAvailabilityChanged.Invoke( available.Equals("1"));
 	}
 
 	void GotPartialResult(string result) {
+		Debug.Log("GotPartialResult" + result);
 		onPartialResults.Invoke(result);
 	}
 
 	void GotFinalResult(string result) {
+		Debug.Log("GotFinalResult" + result);
 		onFinalResults.Invoke(result);
 	}
 
 	void FailedToStartRecording(string reason) {
+		Debug.Log("FailedToStartRecording" + reason);
 		onErrorOnStartRecording.Invoke(reason);
 	}
 
 	void FailedDuringRecording(string reason) {
+		Debug.Log("FailedDuringRecording" + reason);
 		onErrorDuringRecording.Invoke(reason);
 	}
 
 	void AuthorizationStatusFetched(string status) {
-
+		Debug.Log("AuthorizationStatusFetched" + status);
 		AuthorizationStatus authStatus = AuthorizationStatus.NotDetermined;
 		switch (status) {
 		case "denied":

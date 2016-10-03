@@ -10,7 +10,9 @@
 #import "KKSpeechRecognizer.h"
 #import "UnitySpeechRecognizerDelegate.h"
 
-extern void UnitySendMessage(const char *, const char *, const char *);
+extern "C" {
+    void UnitySendMessage(const char* obj, const char* method, const char* msg);
+}
 
 static NSString *GameObjectName = @"KKSpeechRecognizerListener";
 static KKSpeechRecognizer *speechRecognizer = nil;
