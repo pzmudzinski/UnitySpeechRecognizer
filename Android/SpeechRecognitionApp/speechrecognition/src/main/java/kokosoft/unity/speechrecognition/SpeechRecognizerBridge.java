@@ -1,7 +1,5 @@
 package kokosoft.unity.speechrecognition;
 
-import android.app.Activity;
-
 import com.unity3d.player.UnityPlayer;
 
 /**
@@ -13,6 +11,8 @@ public class SpeechRecognizerBridge {
     static private final String GAME_OBJECT_NAME = "KKSpeechRecognizerListener";
 
     static private KKSpeechRecognizer speechRecognizer;
+
+    static private SendToUnitySpeechRecognizerListener listener = new SendToUnitySpeechRecognizerListener(GAME_OBJECT_NAME);
 
     public static boolean EngineExists() {
         return KKSpeechRecognizer.isRecognitionAvailable(UnityPlayer.currentActivity);
@@ -45,12 +45,13 @@ public class SpeechRecognizerBridge {
         });
     }
 
-    public static void StartRecording(final Activity activity, final boolean shouldCollectPartialResult) {
+    public static void StartRecording(final boolean shouldCollectPartialResult) {
         UnityPlayer.currentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if (speechRecognizer == null) {
-                    speechRecognizer = new KKSpeechRecognizer(activity);
+                    speechRecognizer = new KKSpeechRecognizer(UnityPlayer.currentActivity);
+                    speechRecognizer.setListener(listener);
                 }
 
                 speechRecognizer.startRecording(shouldCollectPartialResult);

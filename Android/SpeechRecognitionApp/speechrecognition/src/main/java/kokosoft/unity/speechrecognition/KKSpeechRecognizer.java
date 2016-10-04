@@ -20,10 +20,11 @@ public class KKSpeechRecognizer implements RecognitionListener {
     private static final String TAG = "KKSpeechRecognizer";
 
     public interface KKSpeechRecognizerListener {
-        public void onFailedToStartRecordingWithReason(String reason);
-        public void onFailedDuringRecordingWithReason(String reason);
-        public void gotPartialResult(String result);
-        public void gotFinalResult(String result);
+        void onFailedToStartRecordingWithReason(String reason);
+        void onFailedDuringRecordingWithReason(String reason);
+        void gotPartialResult(String result);
+        void gotFinalResult(String result);
+        void onEndOfSpeech();
     }
 
     public static boolean isRecognitionAvailable(Context context) {
@@ -70,6 +71,7 @@ public class KKSpeechRecognizer implements RecognitionListener {
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,"kokosoft.unity");
         intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, shouldCollectPartialResults);
+        intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
 
         return intent;
     }
@@ -97,6 +99,9 @@ public class KKSpeechRecognizer implements RecognitionListener {
     @Override
     public void onEndOfSpeech() {
         Log.i(TAG, "onEndOfSpeech");
+        if (mListener != null) {
+            mListener.onEndOfSpeech();
+        }
     }
 
     @Override
@@ -119,7 +124,7 @@ public class KKSpeechRecognizer implements RecognitionListener {
         mIsRecording = false;
         ArrayList<String> strings = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         if (mListener != null) {
-            mListener.gotFinalResult(TextUtils.join(" ", strings));
+            mListener.gotFinalResult(strings.get(0));
         }
     }
 

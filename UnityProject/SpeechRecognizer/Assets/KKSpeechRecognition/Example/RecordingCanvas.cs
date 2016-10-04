@@ -17,6 +17,7 @@ public class RecordingCanvas : MonoBehaviour {
 			listener.onErrorOnStartRecording.AddListener(OnError);
 			listener.onFinalResults.AddListener(OnFinalResult);
 			listener.onPartialResults.AddListener(OnPartialResult);
+			listener.onEndOfSpeech.AddListener(OnEndOfSpeech);
 			startRecordingButton.enabled = false;
 			SpeechRecognizer.RequestAccess();
 		} else {
@@ -47,7 +48,11 @@ public class RecordingCanvas : MonoBehaviour {
 			startRecordingButton.enabled = false;
 			break;
 		}
-	} 
+	}
+
+	public void OnEndOfSpeech() {
+		startRecordingButton.GetComponentInChildren<Text>().text = "Start Recording";
+	}
 
 	public void OnError(string result) {
 		Debug.LogError(result);

@@ -23,6 +23,7 @@ public class KKSpeechRecognizerListener : MonoBehaviour {
 	public AvailabilityCallback onAvailabilityChanged = new AvailabilityCallback();
 	public ErrorCallback onErrorDuringRecording = new ErrorCallback();
 	public ErrorCallback onErrorOnStartRecording = new ErrorCallback();
+	public UnityEvent onEndOfSpeech = new UnityEvent();
 
 	void AvailabilityDidChange(string available) {
 		Debug.Log("AvailabilityDidChange" + available);
@@ -47,6 +48,12 @@ public class KKSpeechRecognizerListener : MonoBehaviour {
 	void FailedDuringRecording(string reason) {
 		Debug.Log("FailedDuringRecording" + reason);
 		onErrorDuringRecording.Invoke(reason);
+	}
+
+	// Android-only
+	void OnEndOfSpeech(string dummy) {
+		Debug.Log("End Of Speech");
+		onEndOfSpeech.Invoke();
 	}
 
 	void AuthorizationStatusFetched(string status) {

@@ -35,6 +35,11 @@ public class SendToUnitySpeechRecognizerListener implements KKSpeechRecognizer.K
         sendToUnity("GotFinalResult", result);
     }
 
+    @Override
+    public void onEndOfSpeech() {
+        sendToUnity("OnEndOfSpeech", "");
+    }
+
     private void sendToUnity(String methodName, String param) {
         UnityPlayer.UnitySendMessage(mGameObjectName, methodName, param);
     }
