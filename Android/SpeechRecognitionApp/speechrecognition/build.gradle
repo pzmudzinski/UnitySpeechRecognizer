@@ -31,14 +31,14 @@ dependencies {
 }
 
 task clearJar(type: Delete) {
-    delete 'build/outputs/KKSpeechRecognition.jar'
+    delete 'build/outputs/KKSpeechRecognizer.jar'
 }
 
 task makeJar(type: Copy) {
     from('build/intermediates/bundles/release/')
     into('build/outputs/')
     include('classes.jar')
-    rename ('classes.jar', 'KKSpeechRecognition.jar')
+    rename ('classes.jar', 'KKSpeechRecognizer.jar')
 }
 
 makeJar.dependsOn(clearJar, build)
