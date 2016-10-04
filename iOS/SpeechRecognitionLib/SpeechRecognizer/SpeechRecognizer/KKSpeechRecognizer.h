@@ -66,6 +66,7 @@ typedef void (^AuthCallback)(KKSpeechRecognitionAuthorizationStatus);
 
 + (NSSet<NSLocale *> *)supportedLocales;
 + (KKSpeechRecognitionAuthorizationStatus)authorizationStatus;
++ (BOOL)engineExists;
 
 - (instancetype)init;
 - (instancetype)initWithLocale:(NSLocale*)locale;

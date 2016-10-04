@@ -9,15 +9,21 @@ public class RecordingCanvas : MonoBehaviour {
 	public Text resultText;
 
 	void Start() {
-		KKSpeechRecognizerListener listener = GameObject.FindObjectOfType<KKSpeechRecognizerListener>();
-		listener.onAuthorizationStatusFetched.AddListener(OnAuthorizationStatusFetched);
-		listener.onAvailabilityChanged.AddListener(OnAvailabilityChange);
-		listener.onErrorDuringRecording.AddListener(OnError);
-		listener.onErrorOnStartRecording.AddListener(OnError);
-		listener.onFinalResults.AddListener(OnFinalResult);
-		listener.onPartialResults.AddListener(OnPartialResult);
-		startRecordingButton.enabled = false;
-		SpeechRecognizer.RequestAccess();
+		if (SpeechRecognizer.ExistsOnDevice()) {
+			KKSpeechRecognizerListener listener = GameObject.FindObjectOfType<KKSpeechRecognizerListener>();
+			listener.onAuthorizationStatusFetched.AddListener(OnAuthorizationStatusFetched);
+			listener.onAvailabilityChanged.AddListener(OnAvailabilityChange);
+			listener.onErrorDuringRecording.AddListener(OnError);
+			listener.onErrorOnStartRecording.AddListener(OnError);
+			listener.onFinalResults.AddListener(OnFinalResult);
+			listener.onPartialResults.AddListener(OnPartialResult);
+			startRecordingButton.enabled = false;
+			SpeechRecognizer.RequestAccess();
+		} else {
+			resultText.text = "Sorry, but this device doesn't support speech recognition";
+			startRecordingButton.enabled = false;
+		}
+
 	}
 
 	public void OnFinalResult(string result) {

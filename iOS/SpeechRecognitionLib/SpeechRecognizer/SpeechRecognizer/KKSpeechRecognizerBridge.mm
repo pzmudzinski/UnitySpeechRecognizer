@@ -46,6 +46,10 @@ extern "C" {
         return speechRecognizer.isRecording;
     }
     
+    BOOL _isAvailable() {
+        return speechRecognizer.isAvailable;
+    }
+    
     int _AuthorizationStatus() {
         return [KKSpeechRecognizer authorizationStatus];
     }
@@ -56,6 +60,10 @@ extern "C" {
     
     void _StartRecording(BOOL shouldCollectPartialResults) {
         [speechRecognizer startRecording:shouldCollectPartialResults];
+    }
+    
+    BOOL _EngineExists() {
+        return [KKSpeechRecognizer engineExists];
     }
 }
 

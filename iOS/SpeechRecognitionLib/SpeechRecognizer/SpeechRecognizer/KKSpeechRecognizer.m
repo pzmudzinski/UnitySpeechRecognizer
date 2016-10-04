@@ -28,6 +28,10 @@
     return KKSpeechRecognitionAuthorizationStatusFromSF([SFSpeechRecognizer authorizationStatus]);
 }
 
++ (BOOL)engineExists {
+    return [SFSpeechRecognizer class] != nil;
+}
+
 - (id)init {
     if (self = [super init]) {
         _internalRecognizer = [SFSpeechRecognizer new];

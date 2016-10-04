@@ -1,0 +1,138 @@
+package kokosoft.unity.speechrecognition;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
+import android.text.TextUtils;
+import android.util.Log;
+
+import java.util.ArrayList;
+
+/**
+ * Created by piotr on 04/10/16.
+ */
+
+public class KKSpeechRecognizer implements RecognitionListener {
+
+    private static final String TAG = "KKSpeechRecognizer";
+
+    public interface KKSpeechRecognizerListener {
+        public void onFailedToStartRecordingWithReason(String reason);
+        public void onFailedDuringRecordingWithReason(String reason);
+        public void gotPartialResult(String result);
+        public void gotFinalResult(String result);
+    }
+
+    public static boolean isRecognitionAvailable(Context context) {
+        return SpeechRecognizer.isRecognitionAvailable(context);
+    }
+
+    private SpeechRecognizer mInternalSpeechRecognizer;
+    private boolean mIsRecording;
+    private KKSpeechRecognizerListener mListener;
+
+    public KKSpeechRecognizer(Context context) {
+        super();
+        mInternalSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(context);
+        mInternalSpeechRecognizer.setRecognitionListener(this);
+    }
+
+    public void setListener(KKSpeechRecognizerListener listener) {
+        mListener = listener;
+    }
+
+    public void startRecording(boolean shouldCollectPartialResults) {
+        Intent intent = createRecordingIntent(shouldCollectPartialResults);
+        mIsRecording = true;
+        mInternalSpeechRecognizer.startListening(intent);
+    }
+
+    public void stopIfRecording() {
+        if (mIsRecording) {
+            mIsRecording = false;
+            mInternalSpeechRecognizer.stopListening();
+        }
+    }
+
+    public boolean isAvailable() {
+        return true;
+    }
+
+    public boolean isRecording() {
+        return mIsRecording;
+    }
+
+    private Intent createRecordingIntent(boolean shouldCollectPartialResults) {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,"kokosoft.unity");
+        intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, shouldCollectPartialResults);
+
+        return intent;
+    }
+
+    @Override
+    public void onReadyForSpeech(Bundle params) {
+        Log.i(TAG, "onReadyForSpeech");
+    }
+
+    @Override
+    public void onBeginningOfSpeech() {
+        Log.i(TAG, "onBeginningOfSpeech");
+    }
+
+    @Override
+    public void onRmsChanged(float rmsdB) {
+
+    }
+
+    @Override
+    public void onBufferReceived(byte[] buffer) {
+
+    }
+
+    @Override
+    public void onEndOfSpeech() {
+        Log.i(TAG, "onEndOfSpeech");
+    }
+
+    @Override
+    public void onError(int error) {
+        mIsRecording = false;
+
+        if (error == SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS) {
+            if (mListener != null) {
+                mListener.onFailedToStartRecordingWithReason(String.format("[%d] %s", error, "Insufficient permissions, check your manifest file!"));
+            }
+        } else {
+            if (mListener != null) {
+                mListener.onFailedDuringRecordingWithReason(String.format("SpeechRecognizer error code %d", error));
+            }
+        }
+    }
+
+    @Override
+    public void onResults(Bundle results) {
+        mIsRecording = false;
+        ArrayList<String> strings = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+        if (mListener != null) {
+            mListener.gotFinalResult(TextUtils.join(" ", strings));
+        }
+    }
+
+    @Override
+    public void onPartialResults(Bundle partialResults) {
+        ArrayList<String> strings = partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+        if (mListener != null) {
+            mListener.gotPartialResult(TextUtils.join(" ", strings));
+        }
+    }
+
+    @Override
+    public void onEvent(int eventType, Bundle params) {
+
+    }
+}

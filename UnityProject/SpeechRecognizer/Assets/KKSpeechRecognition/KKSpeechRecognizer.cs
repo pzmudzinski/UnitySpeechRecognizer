@@ -14,6 +14,10 @@ namespace KKSpeech {
 
 	public class SpeechRecognizer : System.Object {
 
+		public static bool ExistsOnDevice() {
+			return iOSSpeechRecognizer._EngineExists();
+		}
+
 		public static void RequestAccess() {
 			iOSSpeechRecognizer._RequestAccess();
 		}
@@ -46,6 +50,9 @@ namespace KKSpeech {
 
 			[DllImport ("__Internal")]
 			internal static extern bool _IsRecording();
+
+			[DllImport ("__Internal")]
+			internal static extern bool _EngineExists();
 
 			[DllImport ("__Internal")]
 			internal static extern int _AuthorizationStatus();
