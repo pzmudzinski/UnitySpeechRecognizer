@@ -10,7 +10,7 @@ public class RecordingCanvas : MonoBehaviour {
 
 	void Start() {
 		if (SpeechRecognizer.ExistsOnDevice()) {
-			KKSpeechRecognizerListener listener = GameObject.FindObjectOfType<KKSpeechRecognizerListener>();
+			SpeechRecognizerListener listener = GameObject.FindObjectOfType<SpeechRecognizerListener>();
 			listener.onAuthorizationStatusFetched.AddListener(OnAuthorizationStatusFetched);
 			listener.onAvailabilityChanged.AddListener(OnAvailabilityChange);
 			listener.onErrorDuringRecording.AddListener(OnError);
