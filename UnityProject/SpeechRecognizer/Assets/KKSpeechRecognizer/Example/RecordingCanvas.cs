@@ -46,6 +46,7 @@ public class RecordingCanvas : MonoBehaviour {
 			break;
 		default:
 			startRecordingButton.enabled = false;
+			resultText.text = "Cannot use Speech Recognition, authorization status is " + status;
 			break;
 		}
 	}

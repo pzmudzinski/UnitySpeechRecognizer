@@ -3,7 +3,8 @@
 
     <application android:allowBackup="true" android:label="@string/app_name"
         android:supportsRtl="true">
-
+        <uses-permission android:name="android.permission.RECORD_AUDIO" /> 
+        <uses-permission android:name="android.permission.INTERNET" />
     </application>
 
 </manifest>

@@ -1,11 +1,14 @@
 package kokosoft.unity.speechrecognition;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+
 import com.unity3d.player.UnityPlayer;
 
 /**
  * Created by piotr on 04/10/16.
  */
-
+@SuppressWarnings("unused")
 public class SpeechRecognizerBridge {
 
     static private final String GAME_OBJECT_NAME = "KKSpeechRecognizerListener";
@@ -31,7 +34,12 @@ public class SpeechRecognizerBridge {
     }
 
     public static int AuthorizationStatus() {
-        return 0;
+        int permissionCheck = PermissionStatus();
+        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+            return 0; // authorized
+        } else {
+            return 1; // denied
+        }
     }
 
     public static void StopIfRecording() {
@@ -60,6 +68,23 @@ public class SpeechRecognizerBridge {
     }
 
     public static void RequestAccess() {
-        UnityPlayer.UnitySendMessage(GAME_OBJECT_NAME, "AuthorizationStatusFetched", "authorized");
+        int permissionCheck = PermissionStatus();
+
+        String status;
+        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+            status = "authorized";
+        } else {
+            status = "denied";
+        }
+
+        UnityPlayer.UnitySendMessage(GAME_OBJECT_NAME, "AuthorizationStatusFetched", status);
+    }
+
+    private static int PermissionStatus() {
+        PackageManager pm = UnityPlayer.currentActivity.getPackageManager();
+        int permissionStatus = pm.checkPermission(
+                Manifest.permission.RECORD_AUDIO,
+                UnityPlayer.currentActivity.getPackageName());
+        return permissionStatus;
     }
 }

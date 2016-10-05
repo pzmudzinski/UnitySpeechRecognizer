@@ -8,7 +8,7 @@ using System.IO;
 public class KKSetSpeechRecognitionPermissionsOniOS {
 
 	public static bool shouldRun = true;
-	public static string microphoneUsageDescription = "Pujt something here about microphone usage";
+	public static string microphoneUsageDescription = "Put something here about microphone usage";
 	public static string speechRecognitionUsageDescription = "Put something here about speech recognition usage";
 
 	private static string nameOfPlist = "Info.plist";
