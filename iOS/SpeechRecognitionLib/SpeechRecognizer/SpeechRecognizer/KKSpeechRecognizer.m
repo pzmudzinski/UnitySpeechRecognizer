@@ -123,9 +123,16 @@
     
     AVAudioFormat *format = [inputNode outputFormatForBus:0];
     
-    [inputNode installTapOnBus:0 bufferSize:1024 format:format block:^(AVAudioPCMBuffer * _Nonnull buffer, AVAudioTime * _Nonnull when) {
-        [_recognitionRequest appendAudioPCMBuffer:buffer];
-    }];
+    @try {
+        [inputNode installTapOnBus:0 bufferSize:1024 format:format block:^(AVAudioPCMBuffer * _Nonnull buffer, AVAudioTime * _Nonnull when) {
+            [_recognitionRequest appendAudioPCMBuffer:buffer];
+        }];
+    }
+    @catch (NSException *exception) {
+        NSLog(@"%@", exception.userInfo);
+        [self sendStartRecordingErrorMessage:[NSString stringWithFormat:@"%@", exception.userInfo]];
+        return;
+    }
     
     [_audioEngine prepare];
     
