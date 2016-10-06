@@ -18,6 +18,20 @@ static NSString *GameObjectName = @"KKSpeechRecognizerListener";
 static KKSpeechRecognizer *speechRecognizer = nil;
 static UnitySpeechRecognizerDelegate *speechDelegate = [[UnitySpeechRecognizerDelegate alloc] initWithGameObject:GameObjectName];
 
+KKSpeechRecognizer* GetSpeechRecognizer() {
+    
+    if ([SFSpeechRecognizer class] == nil) {
+        return nil;
+    }
+    
+    if (speechRecognizer == nil) {
+        speechRecognizer = [[KKSpeechRecognizer alloc] init];
+        speechRecognizer.delegate = speechDelegate;
+    }
+    
+    return speechRecognizer;
+}
+
 extern "C" {
     
     void _InitWithLocale(char *localeID) {
@@ -32,38 +46,37 @@ extern "C" {
     }
     
     void _RequestAccess() {
-        if (speechRecognizer == nil) {
-            speechRecognizer = [[KKSpeechRecognizer alloc] init];
-            speechRecognizer.delegate = speechDelegate;
-        }
-        
-        [speechRecognizer requestAuthorization:^(KKSpeechRecognitionAuthorizationStatus status) {
+        [GetSpeechRecognizer() requestAuthorization:^(KKSpeechRecognitionAuthorizationStatus status) {
             UnitySendMessage([GameObjectName UTF8String], [@"AuthorizationStatusFetched" UTF8String], [StringFromKKSpeechRecognitionAuthorizationStatus(status) UTF8String]);
         }];
     }
     
     BOOL _IsRecording() {
-        return speechRecognizer.isRecording;
+        return GetSpeechRecognizer().isRecording;
     }
     
     BOOL _isAvailable() {
-        return speechRecognizer.isAvailable;
-    }
-    
-    int _AuthorizationStatus() {
-        return [KKSpeechRecognizer authorizationStatus];
-    }
-    
-    void _StopIfRecording() {
-        [speechRecognizer stopIfRecording];
-    }
-    
-    void _StartRecording(BOOL shouldCollectPartialResults) {
-        [speechRecognizer startRecording:shouldCollectPartialResults];
+        return GetSpeechRecognizer().isAvailable;
     }
     
     BOOL _EngineExists() {
         return [KKSpeechRecognizer engineExists];
+    }
+    
+    int _AuthorizationStatus() {
+        if (_EngineExists()) {
+            return [KKSpeechRecognizer authorizationStatus];
+        } else {
+            return 3; // restricted
+        }
+    }
+    
+    void _StopIfRecording() {
+        [GetSpeechRecognizer() stopIfRecording];
+    }
+    
+    void _StartRecording(BOOL shouldCollectPartialResults) {
+        [GetSpeechRecognizer() startRecording:shouldCollectPartialResults];
     }
 }
 

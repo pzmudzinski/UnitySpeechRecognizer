@@ -45,8 +45,8 @@ public class KKSpeechRecognizer implements RecognitionListener {
         mListener = listener;
     }
 
-    public void startRecording(boolean shouldCollectPartialResults) {
-        Intent intent = createRecordingIntent(shouldCollectPartialResults);
+    public void startRecording(SpeechRecognitionOptions options) {
+        Intent intent = createRecordingIntent(options);
         mIsRecording = true;
         mInternalSpeechRecognizer.startListening(intent);
     }
@@ -66,11 +66,14 @@ public class KKSpeechRecognizer implements RecognitionListener {
         return mIsRecording;
     }
 
-    private Intent createRecordingIntent(boolean shouldCollectPartialResults) {
+    private Intent createRecordingIntent(SpeechRecognitionOptions options) {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,"kokosoft.unity");
-        intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, shouldCollectPartialResults);
+        intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, options.shouldCollectPartialResults);
+        if (!TextUtils.isEmpty(options.prompt)) {
+            intent.putExtra(RecognizerIntent.EXTRA_PROMPT, options.prompt);
+        }
         intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
 
         return intent;

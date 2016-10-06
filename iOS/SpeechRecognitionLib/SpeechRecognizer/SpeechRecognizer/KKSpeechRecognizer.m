@@ -35,6 +35,7 @@
 - (id)init {
     if (self = [super init]) {
         _internalRecognizer = [SFSpeechRecognizer new];
+        _internalRecognizer.delegate = self;
         _audioEngine = [AVAudioEngine new];
     }
     return self;
@@ -43,6 +44,7 @@
 - (id)initWithLocale:(NSLocale *)locale {
     if (self = [super init]) {
         _internalRecognizer = [[SFSpeechRecognizer alloc] initWithLocale:locale];
+        _internalRecognizer.delegate = self;
         _audioEngine = [AVAudioEngine new];
     }
     return self;
@@ -79,7 +81,7 @@
     
     if (error != nil) {
         NSLog(@"KKSpeechRecognizer: AVAudioSession couldn't be created");
-        [self sendStartRecordingErrorMessage:error.localizedDescription];
+        [self sendStartRecordingErrorMessage:[NSString stringWithFormat:@"%@", error.userInfo]];
         return;
     }
     
@@ -109,13 +111,13 @@
                     [_delegate speechRecognizer:self gotPartialResult:result.bestTranscription.formattedString];
                 });
             }
-            
-            if (error != nil) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [_delegate speechRecognizer:self failedDuringRecordingWithReason:error.localizedDescription];
-                });
-                [self stopRecording];
-            }
+        }
+        
+        if (error != nil) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_delegate speechRecognizer:self failedDuringRecordingWithReason:[NSString stringWithFormat:@"%@", error.userInfo]];
+            });
+            [self stopRecording];
         }
     }];
     
@@ -131,7 +133,7 @@
     [_audioEngine startAndReturnError:&startError];
     
     if (startError != nil) {
-        [self sendStartRecordingErrorMessage:startError.localizedDescription];
+        [self sendStartRecordingErrorMessage:[NSString stringWithFormat:@"%@", startError.userInfo]];
     }
 }
 
@@ -159,6 +161,8 @@
 }
 
 - (void)speechRecognizer:(SFSpeechRecognizer *)speechRecognizer availabilityDidChange:(BOOL)available {
-    [_delegate speechRecognizer:self availabilityDidChange:available];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_delegate speechRecognizer:self availabilityDidChange:available];
+    });
 }
 @end

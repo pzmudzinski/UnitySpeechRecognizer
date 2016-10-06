@@ -12,6 +12,10 @@ namespace KKSpeech {
 		Restricted
 	}
 
+	public struct SpeechRecognitionOptions {
+		public bool shouldCollectPartialResults;
+	}
+
 	/*
 	 * Please check README file before using this class
 	 */ 
@@ -61,12 +65,20 @@ namespace KKSpeech {
 			#endif
 		}
 
-		public static void StartRecording(bool shouldCollectionPartialResults) {
+		private static void StartRecording(SpeechRecognitionOptions options) {
+			#if UNITY_IOS && !UNITY_EDITOR
+			iOSSpeechRecognizer._StartRecording(options.shouldCollectPartialResults);
+			#elif UNITY_ANDROID && !UNITY_EDITOR
+			AndroidSpeechRecognizer.StartRecording(options);
+			#endif
+		}
+
+		public static void StartRecording(bool shouldCollectPartialResults) {
 			Debug.Log("StartRecording...");
 			#if UNITY_IOS && !UNITY_EDITOR
-			iOSSpeechRecognizer._StartRecording(shouldCollectionPartialResults);
+			iOSSpeechRecognizer._StartRecording(shouldCollectPartialResults);
 			#elif UNITY_ANDROID && !UNITY_EDITOR
-			AndroidSpeechRecognizer.StartRecording(shouldCollectionPartialResults);
+			AndroidSpeechRecognizer.StartRecording(shouldCollectPartialResults);
 			#endif
 		}
 
@@ -116,7 +128,19 @@ namespace KKSpeech {
 			}
 
 			internal static void StartRecording(bool shouldCollectPartialResults) {
-				GetAndroidBridge().CallStatic("StartRecording", shouldCollectPartialResults);
+				var options = new SpeechRecognitionOptions();
+				options.shouldCollectPartialResults = shouldCollectPartialResults;
+				StartRecording(options);
+			}
+
+			internal static void StartRecording(SpeechRecognitionOptions options) {
+				GetAndroidBridge().CallStatic("StartRecording", CreateJavaRecognitionOptionsFrom(options));
+			}
+
+			private static AndroidJavaObject CreateJavaRecognitionOptionsFrom(SpeechRecognitionOptions options) {
+				var javaOptions = new AndroidJavaObject("kokosoft.unity.speechrecognition.SpeechRecognitionOptions");
+				javaOptions.Set<bool>("shouldCollectPartialResults", options.shouldCollectPartialResults);
+				return javaOptions;
 			}
 
 			private static AndroidJavaObject GetAndroidBridge() {

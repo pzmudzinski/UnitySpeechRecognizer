@@ -37,6 +37,11 @@ public class RecordingCanvas : MonoBehaviour {
 
 	public void OnAvailabilityChange(bool available) {
 		startRecordingButton.enabled = available;
+		if (!available) {
+			resultText.text = "Speech Recognition not available";
+		} else {
+			resultText.text = "Say something :-)";
+		}
 	}
 
 	public void OnAuthorizationStatusFetched(AuthorizationStatus status) {
@@ -55,8 +60,10 @@ public class RecordingCanvas : MonoBehaviour {
 		startRecordingButton.GetComponentInChildren<Text>().text = "Start Recording";
 	}
 
-	public void OnError(string result) {
-		Debug.LogError(result);
+	public void OnError(string error) {
+		Debug.LogError(error);
+		resultText.text = "Something went wrong... Try again! \n [" + error + "]";
+		startRecordingButton.GetComponentInChildren<Text>().text = "Start Recording";
 	}
 
 	public void OnStartRecordingPressed() {
@@ -66,6 +73,7 @@ public class RecordingCanvas : MonoBehaviour {
 		} else {
 			SpeechRecognizer.StartRecording(true);
 			startRecordingButton.GetComponentInChildren<Text>().text = "Stop Recording";
+			resultText.text = "Say something :-)";
 		}
 	}
 }

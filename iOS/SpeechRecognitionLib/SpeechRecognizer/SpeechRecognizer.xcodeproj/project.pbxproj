@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		AE8A87051DA1C854005E2365 /* KKSpeechRecognizerBridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = AE8A87041DA1C854005E2365 /* KKSpeechRecognizerBridge.mm */; };
-		AE8A87081DA1CA5C005E2365 /* Speech.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE8A87071DA1CA5C005E2365 /* Speech.framework */; };
+		AE8A87081DA1CA5C005E2365 /* Speech.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE8A87071DA1CA5C005E2365 /* Speech.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		AE8A870C1DA24F87005E2365 /* UnitySpeechRecognizerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AE8A870B1DA24F87005E2365 /* UnitySpeechRecognizerDelegate.m */; };
 		AEDD8D3D1DA1BFD600106635 /* KKSpeechRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = AEDD8D3C1DA1BFD600106635 /* KKSpeechRecognizer.m */; };
 		AEDD8D3E1DA1BFD600106635 /* KKSpeechRecognizer.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = AEDD8D3B1DA1BFD600106635 /* KKSpeechRecognizer.h */; };

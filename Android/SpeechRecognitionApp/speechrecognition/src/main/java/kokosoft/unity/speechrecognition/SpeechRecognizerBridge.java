@@ -53,7 +53,7 @@ public class SpeechRecognizerBridge {
         });
     }
 
-    public static void StartRecording(final boolean shouldCollectPartialResult) {
+    public static void StartRecording(final SpeechRecognitionOptions options) {
         UnityPlayer.currentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -62,7 +62,7 @@ public class SpeechRecognizerBridge {
                     speechRecognizer.setListener(listener);
                 }
 
-                speechRecognizer.startRecording(shouldCollectPartialResult);
+                speechRecognizer.startRecording(options);
             }
         });
     }

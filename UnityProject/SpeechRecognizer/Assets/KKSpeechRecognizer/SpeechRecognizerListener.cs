@@ -29,27 +29,27 @@ namespace KKSpeech {
 		public UnityEvent onEndOfSpeech = new UnityEvent();
 
 		void AvailabilityDidChange(string available) {
-			Debug.Log("AvailabilityDidChange" + available);
+			Debug.Log("AvailabilityDidChange " + available);
 			onAvailabilityChanged.Invoke( available.Equals("1"));
 		}
 
 		void GotPartialResult(string result) {
-			Debug.Log("GotPartialResult" + result);
+			Debug.Log("GotPartialResult " + result);
 			onPartialResults.Invoke(result);
 		}
 
 		void GotFinalResult(string result) {
-			Debug.Log("GotFinalResult" + result);
+			Debug.Log("GotFinalResult " + result);
 			onFinalResults.Invoke(result);
 		}
 
 		void FailedToStartRecording(string reason) {
-			Debug.Log("FailedToStartRecording" + reason);
+			Debug.Log("FailedToStartRecording " + reason);
 			onErrorOnStartRecording.Invoke(reason);
 		}
 
 		void FailedDuringRecording(string reason) {
-			Debug.Log("FailedDuringRecording" + reason);
+			Debug.Log("FailedDuringRecording " + reason);
 			onErrorDuringRecording.Invoke(reason);
 		}
 
