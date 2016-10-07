@@ -28,19 +28,6 @@ typedef NS_ENUM(NSInteger, KKSpeechRecognitionAuthorizationStatus) {
     KKSpeechRecognitionAuthorizationStatusRestricted
 };
 
-KKSpeechRecognitionAuthorizationStatus KKSpeechRecognitionAuthorizationStatusFromSF(SFSpeechRecognizerAuthorizationStatus sfStatus) {
-    switch (sfStatus) {
-        case SFSpeechRecognizerAuthorizationStatusDenied:
-            return KKSpeechRecognitionAuthorizationStatusDenied;
-        case SFSpeechRecognizerAuthorizationStatusAuthorized:
-            return KKSpeechRecognitionAuthorizationStatusAuthorized;
-        case SFSpeechRecognizerAuthorizationStatusRestricted:
-            return KKSpeechRecognitionAuthorizationStatusRestricted;
-        case SFSpeechRecognizerAuthorizationStatusNotDetermined:
-            return KKSpeechRecognitionAuthorizationStatusNotDetermined;
-    }
-}
-
 NSString *StringFromKKSpeechRecognitionAuthorizationStatus(KKSpeechRecognitionAuthorizationStatus status) {
     switch (status) {
         case KKSpeechRecognitionAuthorizationStatusDenied:

@@ -3,7 +3,9 @@ using System.Collections;
 using KKSpeech;
 using UnityEngine.Events;
 namespace KKSpeech {
-	
+	/*
+	 * check readme.pdf before using!
+	 */
 	public class SpeechRecognizerListener : MonoBehaviour {
 
 		[System.Serializable]

@@ -8,6 +8,19 @@
 
 #import "KKSpeechRecognizer.h"
 
+KKSpeechRecognitionAuthorizationStatus KKSpeechRecognitionAuthorizationStatusFromSF(SFSpeechRecognizerAuthorizationStatus sfStatus) {    
+    switch (sfStatus) {
+        case SFSpeechRecognizerAuthorizationStatusDenied:
+            return KKSpeechRecognitionAuthorizationStatusDenied;
+        case SFSpeechRecognizerAuthorizationStatusAuthorized:
+            return KKSpeechRecognitionAuthorizationStatusAuthorized;
+        case SFSpeechRecognizerAuthorizationStatusRestricted:
+            return KKSpeechRecognitionAuthorizationStatusRestricted;
+        case SFSpeechRecognizerAuthorizationStatusNotDetermined:
+            return KKSpeechRecognitionAuthorizationStatusNotDetermined;
+    }
+}
+
 @interface KKSpeechRecognizer() {
     SFSpeechRecognizer *_internalRecognizer;
     SFSpeechAudioBufferRecognitionRequest *_recognitionRequest;

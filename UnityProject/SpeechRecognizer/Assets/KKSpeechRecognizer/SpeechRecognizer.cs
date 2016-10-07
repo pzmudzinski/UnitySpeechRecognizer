@@ -17,8 +17,8 @@ namespace KKSpeech {
 	}
 
 	/*
-	 * Please check README file before using this class
-	 */ 
+	 * check readme.pdf before using!
+	 */
 	public class SpeechRecognizer : System.Object {
 
 		public static bool ExistsOnDevice() {

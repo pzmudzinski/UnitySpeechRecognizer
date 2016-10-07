@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		AE8A87051DA1C854005E2365 /* KKSpeechRecognizerBridge.mm in Sources */ = {isa = PBXBuildFile; fileRef = AE8A87041DA1C854005E2365 /* KKSpeechRecognizerBridge.mm */; };
-		AE8A87081DA1CA5C005E2365 /* Speech.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE8A87071DA1CA5C005E2365 /* Speech.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		AE8A870C1DA24F87005E2365 /* UnitySpeechRecognizerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AE8A870B1DA24F87005E2365 /* UnitySpeechRecognizerDelegate.m */; };
 		AEDD8D3D1DA1BFD600106635 /* KKSpeechRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = AEDD8D3C1DA1BFD600106635 /* KKSpeechRecognizer.m */; };
 		AEDD8D3E1DA1BFD600106635 /* KKSpeechRecognizer.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = AEDD8D3B1DA1BFD600106635 /* KKSpeechRecognizer.h */; };
@@ -42,7 +41,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AE8A87081DA1CA5C005E2365 /* Speech.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -245,14 +243,20 @@
 		AEDD8D421DA1BFD600106635 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_MODULES = NO;
+				CLANG_MODULES_AUTOLINK = NO;
 				DEVELOPMENT_TEAM = 53423L63BG;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_CFLAGS = "-fembed-bitcode";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-weak_framework",
+					Speech,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "SpeechRecognizer/SpeechRecognizer-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
@@ -261,13 +265,19 @@
 		AEDD8D431DA1BFD600106635 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_MODULES = NO;
+				CLANG_MODULES_AUTOLINK = NO;
 				DEVELOPMENT_TEAM = 53423L63BG;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				OTHER_LDFLAGS = "-ObjC";
+				OTHER_CFLAGS = "-fembed-bitcode";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-weak_framework",
+					Speech,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "SpeechRecognizer/SpeechRecognizer-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
