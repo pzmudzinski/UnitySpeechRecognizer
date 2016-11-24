@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Runtime.InteropServices;
 using UnityEngine.Events;
+using System.Text;
+using System.Collections.Generic;
 
 namespace KKSpeech {
 	
@@ -14,6 +16,16 @@ namespace KKSpeech {
 
 	public struct SpeechRecognitionOptions {
 		public bool shouldCollectPartialResults;
+	}
+
+	public struct LanguageOption {
+		public readonly string id;
+		public readonly string displayName;
+
+		public LanguageOption(string id, string displayName) {
+			this.id = id;
+			this.displayName = displayName;
+		}
 	}
 
 	/*
@@ -82,8 +94,32 @@ namespace KKSpeech {
 			#endif
 		}
 
+		public static List<LanguageOption> SupportedLanguages() {
+			#if UNITY_IOS && !UNITY_EDITOR
+			return iOSSpeechRecognizer.SupportedLanguages();
+			#elif UNITY_ANDROID && !UNITY_EDITOR
+			return AndroidSpeechRecognizer._SupportedLanguages();
+			#endif
+
+			return new List<LanguageOption>();
+		}
+
+		public static void SetDetectionLanguage(string languageID) {
+			#if UNITY_IOS && !UNITY_EDITOR
+			iOSSpeechRecognizer._SetDetectionLanguage(languageID);
+			#elif UNITY_ANDROID && !UNITY_EDITOR
+			return AndroidSpeechRecognizer._SupportedLanguages();
+			#endif
+		}
+
 
 		private class iOSSpeechRecognizer {
+
+			[DllImport ("__Internal")]
+			internal static extern void _SetDetectionLanguage(string languageID);
+
+			[DllImport ("__Internal")]
+			internal static extern string _SupportedLanguages();
 
 			[DllImport ("__Internal")]
 			internal static extern void _RequestAccess();
@@ -103,9 +139,26 @@ namespace KKSpeech {
 			[DllImport ("__Internal")]
 			internal static extern void _StartRecording(bool shouldCollectPartialResults);
 
+			public static List<LanguageOption> SupportedLanguages() {
+				string formattedLangs = _SupportedLanguages();
+				string[] components = formattedLangs.Split('|');
+
+				List<LanguageOption> languageOptions = new List<LanguageOption>();
+				foreach (string component in components) {
+					string[] idAndName = component.Split('^');
+					var option = new LanguageOption(idAndName[0], idAndName[1]);
+					languageOptions.Add(option);
+				}
+
+				return languageOptions;
+			}
 		}
 
 		private class AndroidSpeechRecognizer {
+
+			internal static string[] SupportedLanguages() {
+				return new string[0];
+			}
 
 			internal static void RequestAccess() {
 				GetAndroidBridge().CallStatic("RequestAccess");

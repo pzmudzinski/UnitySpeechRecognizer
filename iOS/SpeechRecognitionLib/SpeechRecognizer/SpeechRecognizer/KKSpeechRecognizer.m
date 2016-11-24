@@ -71,7 +71,11 @@ KKSpeechRecognitionAuthorizationStatus KKSpeechRecognitionAuthorizationStatusFro
     return [_internalRecognizer isAvailable];
 }
 
-- (void)requestAuthorization:(AuthCallback)callback {
+- (NSLocale *)locale {
+    return _internalRecognizer.locale;
+}
+
++ (void)requestAuthorization:(AuthCallback)callback {
     [SFSpeechRecognizer requestAuthorization:^(SFSpeechRecognizerAuthorizationStatus status) {
         KKSpeechRecognitionAuthorizationStatus wrapperStatus = KKSpeechRecognitionAuthorizationStatusFromSF(status);
         dispatch_async(dispatch_get_main_queue(), ^{

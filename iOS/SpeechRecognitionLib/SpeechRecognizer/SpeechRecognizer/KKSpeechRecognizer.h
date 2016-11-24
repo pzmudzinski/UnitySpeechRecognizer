@@ -48,6 +48,7 @@ typedef void (^AuthCallback)(KKSpeechRecognitionAuthorizationStatus);
 
 @property (nonatomic, readonly) BOOL isRecording;
 @property (nonatomic, readonly) BOOL isAvailable;
+@property (nonatomic, readonly) NSLocale *locale;
 
 @property (nonatomic, assign) id<KKSpeechRecognizerDelegate> delegate;
 
@@ -58,7 +59,7 @@ typedef void (^AuthCallback)(KKSpeechRecognitionAuthorizationStatus);
 - (instancetype)init;
 - (instancetype)initWithLocale:(NSLocale*)locale;
 
-- (void)requestAuthorization:(AuthCallback)callback;
++ (void)requestAuthorization:(AuthCallback)callback;
 - (void)startRecording:(BOOL)collectPartialResults;
 - (void)stopIfRecording;
 
