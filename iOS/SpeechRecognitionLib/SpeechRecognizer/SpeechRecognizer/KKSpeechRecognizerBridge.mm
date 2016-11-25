@@ -12,7 +12,6 @@
 
 struct RecognitionOptions {
     BOOL shouldCollectPartialResults;
-    char *languageID;
 };
 
 extern "C" {
