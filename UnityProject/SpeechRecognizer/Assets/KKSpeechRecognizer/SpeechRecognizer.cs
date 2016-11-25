@@ -94,21 +94,19 @@ namespace KKSpeech {
 			#endif
 		}
 
-		public static List<LanguageOption> SupportedLanguages() {
+		public static void GetSupportedLanguages() {
 			#if UNITY_IOS && !UNITY_EDITOR
 			return iOSSpeechRecognizer.SupportedLanguages();
 			#elif UNITY_ANDROID && !UNITY_EDITOR
-			return AndroidSpeechRecognizer._SupportedLanguages();
+			AndroidSpeechRecognizer.GetSupportedLanguages();
 			#endif
-
-			return new List<LanguageOption>();
 		}
 
 		public static void SetDetectionLanguage(string languageID) {
 			#if UNITY_IOS && !UNITY_EDITOR
 			iOSSpeechRecognizer._SetDetectionLanguage(languageID);
 			#elif UNITY_ANDROID && !UNITY_EDITOR
-			return AndroidSpeechRecognizer._SupportedLanguages();
+			AndroidSpeechRecognizer.SetDetectionLanguage(languageID);
 			#endif
 		}
 
@@ -139,25 +137,25 @@ namespace KKSpeech {
 			[DllImport ("__Internal")]
 			internal static extern void _StartRecording(bool shouldCollectPartialResults);
 
-			public static List<LanguageOption> SupportedLanguages() {
+			public static void SupportedLanguages() {
 				string formattedLangs = _SupportedLanguages();
-				string[] components = formattedLangs.Split('|');
-
-				List<LanguageOption> languageOptions = new List<LanguageOption>();
-				foreach (string component in components) {
-					string[] idAndName = component.Split('^');
-					var option = new LanguageOption(idAndName[0], idAndName[1]);
-					languageOptions.Add(option);
+				var listener = GameObject.FindObjectOfType<SpeechRecognizerListener>();
+				if (listener != null) {
+					listener.SupportedLanguagesFetched(formattedLangs);
 				}
-
-				return languageOptions;
 			}
 		}
 
 		private class AndroidSpeechRecognizer {
 
-			internal static string[] SupportedLanguages() {
-				return new string[0];
+			private static string DETECTION_LANGUAGE = null;
+
+			internal static void GetSupportedLanguages() {
+				GetAndroidBridge().CallStatic("GetSupportedLanguages");
+			}
+
+			internal static void SetDetectionLanguage(string languageID) {
+				AndroidSpeechRecognizer.DETECTION_LANGUAGE = languageID;
 			}
 
 			internal static void RequestAccess() {
@@ -193,6 +191,7 @@ namespace KKSpeech {
 			private static AndroidJavaObject CreateJavaRecognitionOptionsFrom(SpeechRecognitionOptions options) {
 				var javaOptions = new AndroidJavaObject("kokosoft.unity.speechrecognition.SpeechRecognitionOptions");
 				javaOptions.Set<bool>("shouldCollectPartialResults", options.shouldCollectPartialResults);
+				javaOptions.Set<string>("languageID", DETECTION_LANGUAGE);
 				return javaOptions;
 			}
 

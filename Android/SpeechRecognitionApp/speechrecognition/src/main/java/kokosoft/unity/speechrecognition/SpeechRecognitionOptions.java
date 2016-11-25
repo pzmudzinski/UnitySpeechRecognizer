@@ -8,6 +8,7 @@ public class SpeechRecognitionOptions {
 
     public String prompt;
     public boolean shouldCollectPartialResults;
+    public String languageID;
 
     public SpeechRecognitionOptions() {
 

@@ -74,6 +74,10 @@ public class KKSpeechRecognizer implements RecognitionListener {
         if (!TextUtils.isEmpty(options.prompt)) {
             intent.putExtra(RecognizerIntent.EXTRA_PROMPT, options.prompt);
         }
+
+        if (!TextUtils.isEmpty(options.languageID)) {
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, options.languageID);
+        }
         intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
 
         return intent;

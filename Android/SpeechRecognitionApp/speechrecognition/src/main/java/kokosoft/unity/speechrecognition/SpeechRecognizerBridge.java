@@ -1,9 +1,16 @@
 package kokosoft.unity.speechrecognition;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.speech.RecognizerIntent;
+import android.text.TextUtils;
+import android.util.Log;
 
 import com.unity3d.player.UnityPlayer;
+
+import java.util.List;
 
 /**
  * Created by piotr on 04/10/16.
@@ -78,6 +85,32 @@ public class SpeechRecognizerBridge {
         }
 
         UnityPlayer.UnitySendMessage(GAME_OBJECT_NAME, "AuthorizationStatusFetched", status);
+    }
+
+    static private LanguageDetailsChecker languageDetailsChecker = new LanguageDetailsChecker(new LanguageDetailsChecker.LanguageDetailsListener() {
+        @Override
+        public void onLanguagesFetched(List<LanguageOption> supportedLanguages) {
+            String[] optionStrings = new String[supportedLanguages.size()];
+
+            LanguageOption option;
+            for (int i = 0 ; i < supportedLanguages.size() ; i++) {
+                option = supportedLanguages.get(i);
+                optionStrings[i] = String.format("%s^%s", option.id, option.displayName);
+            }
+
+            String wholeString = TextUtils.join("|", optionStrings);
+            UnityPlayer.UnitySendMessage(GAME_OBJECT_NAME, "SupportedLanguagesFetched", wholeString);
+        }
+    });
+
+    public static void GetSupportedLanguages() {
+        try {
+            Intent detailsIntent = new Intent(RecognizerIntent.ACTION_GET_LANGUAGE_DETAILS);
+            UnityPlayer.currentActivity.sendOrderedBroadcast(detailsIntent, null, languageDetailsChecker, null, Activity.RESULT_OK, null, null);
+        }
+        catch (Exception e){
+            Log.e("Unity", Log.getStackTraceString(e));
+        }
     }
 
     private static int PermissionStatus() {

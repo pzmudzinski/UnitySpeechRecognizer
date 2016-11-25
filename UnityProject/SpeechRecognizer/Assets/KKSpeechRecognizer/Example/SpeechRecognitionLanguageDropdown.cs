@@ -8,16 +8,31 @@ namespace KKSpeech {
 	public class SpeechRecognitionLanguageDropdown : MonoBehaviour {
 
 		private Dropdown dropdown;
-		List<LanguageOption> languageOptions;
-		// Use this for initialization
+		private List<LanguageOption> languageOptions;
+
 		void Start () {
 			dropdown = GetComponent<Dropdown>();
-			dropdown.onValueChanged.AddListener(onDropdownValueChanged);
-
-			List<LanguageOption> languages = SpeechRecognizer.SupportedLanguages();
-
+			dropdown.onValueChanged.AddListener(OnDropdownValueChanged);
 			dropdown.ClearOptions();
 
+			GameObject.FindObjectOfType<SpeechRecognizerListener>().
+				onSupportedLanguagesFetched.
+				AddListener(OnSupportedLanguagesFetched);
+
+			SpeechRecognizer.GetSupportedLanguages();
+		}
+
+		public void GoToRecordingScene() {
+			SceneManager.LoadScene("ExampleScene");
+		}
+
+		void OnDropdownValueChanged(int index) {
+			LanguageOption languageOption = languageOptions[index];
+
+			SpeechRecognizer.SetDetectionLanguage(languageOption.id);
+		}
+
+		void OnSupportedLanguagesFetched(List<LanguageOption> languages) {
 			List<Dropdown.OptionData> dropdownOptions = new List<Dropdown.OptionData>();
 
 			foreach (LanguageOption langOption in languages) {
@@ -27,17 +42,7 @@ namespace KKSpeech {
 			dropdown.AddOptions(dropdownOptions);
 
 			languageOptions = languages;
-		}
-
-		public void GoToRecordingScene() {
-			SceneManager.LoadScene("ExampleScene");
-		}
-
-		void onDropdownValueChanged(int index) {
-			LanguageOption languageOption = languageOptions[index];
-
-			SpeechRecognizer.SetDetectionLanguage(languageOption.id);
-		}
+		} 
 
 	}
 }

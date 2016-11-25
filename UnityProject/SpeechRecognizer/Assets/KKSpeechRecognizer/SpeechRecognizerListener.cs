@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using KKSpeech;
 using UnityEngine.Events;
 namespace KKSpeech {
@@ -20,6 +21,10 @@ namespace KKSpeech {
 		[System.Serializable]
 		public class ErrorCallback: UnityEvent<string> {};
 
+		[System.Serializable]
+		public class SupportedLanguagesCallback: UnityEvent<List<LanguageOption>> {};
+
+		public SupportedLanguagesCallback onSupportedLanguagesFetched = new SupportedLanguagesCallback();
 		public AuthorizationCallback onAuthorizationStatusFetched = new AuthorizationCallback();
 		public ResultCallback onPartialResults = new ResultCallback();
 		public ResultCallback onFinalResults = new ResultCallback();
@@ -53,6 +58,19 @@ namespace KKSpeech {
 		void FailedDuringRecording(string reason) {
 			Debug.Log("FailedDuringRecording " + reason);
 			onErrorDuringRecording.Invoke(reason);
+		}
+
+		public void SupportedLanguagesFetched(string langs) {
+			string[] components = langs.Split('|');
+
+			List<LanguageOption> languageOptions = new List<LanguageOption>();
+			foreach (string component in components) {
+				string[] idAndName = component.Split('^');
+				var option = new LanguageOption(idAndName[0], idAndName[1]);
+				languageOptions.Add(option);
+			}
+
+			onSupportedLanguagesFetched.Invoke(languageOptions);
 		}
 
 		// Android-only
