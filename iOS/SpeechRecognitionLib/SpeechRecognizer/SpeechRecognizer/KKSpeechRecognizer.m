@@ -26,6 +26,7 @@ KKSpeechRecognitionAuthorizationStatus KKSpeechRecognitionAuthorizationStatusFro
     SFSpeechAudioBufferRecognitionRequest *_recognitionRequest;
     SFSpeechRecognitionTask *_recognitionTask;
     AVAudioEngine *_audioEngine;
+    NSString *_defaultAudioSessionCategory;
 }
 
 - (void)sendStartRecordingErrorMessage:(NSString *)message;
@@ -92,6 +93,7 @@ KKSpeechRecognitionAuthorizationStatus KKSpeechRecognitionAuthorizationStatusFro
     
     NSError *error;
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    _defaultAudioSessionCategory = audioSession.category;
     [audioSession setCategory:AVAudioSessionCategoryRecord error:&error];
     [audioSession setMode:AVAudioSessionModeMeasurement error:&error];
     [audioSession setActive:YES error:&error];
@@ -170,7 +172,9 @@ KKSpeechRecognitionAuthorizationStatus KKSpeechRecognitionAuthorizationStatusFro
     _recognitionTask = nil;
     
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-    [audioSession setCategory:AVAudioSessionCategoryAmbient error:nil];
+    if (_defaultAudioSessionCategory) {
+        [audioSession setCategory:_defaultAudioSessionCategory error:nil];
+    }
 }
 
 - (void)stopIfRecording {

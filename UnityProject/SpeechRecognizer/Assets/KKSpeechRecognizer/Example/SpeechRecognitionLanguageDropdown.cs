@@ -22,6 +22,7 @@ namespace KKSpeech {
 			SpeechRecognizer.GetSupportedLanguages();
 		}
 
+		// remember to add ExampleScene to Build Settings!
 		public void GoToRecordingScene() {
 			SceneManager.LoadScene("ExampleScene");
 		}
