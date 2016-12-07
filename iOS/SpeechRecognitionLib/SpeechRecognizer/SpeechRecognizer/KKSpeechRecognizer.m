@@ -8,7 +8,7 @@
 
 #import "KKSpeechRecognizer.h"
 
-KKSpeechRecognitionAuthorizationStatus KKSpeechRecognitionAuthorizationStatusFromSF(SFSpeechRecognizerAuthorizationStatus sfStatus) {    
+KKSpeechRecognitionAuthorizationStatus KKSpeechRecognitionAuthorizationStatusFromSF(SFSpeechRecognizerAuthorizationStatus sfStatus) {
     switch (sfStatus) {
         case SFSpeechRecognizerAuthorizationStatusDenied:
             return KKSpeechRecognitionAuthorizationStatusDenied;
@@ -168,6 +168,9 @@ KKSpeechRecognitionAuthorizationStatus KKSpeechRecognitionAuthorizationStatusFro
     [_recognitionRequest endAudio];
     _recognitionRequest = nil;
     _recognitionTask = nil;
+    
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    [audioSession setCategory:AVAudioSessionCategoryAmbient error:nil];
 }
 
 - (void)stopIfRecording {

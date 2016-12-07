@@ -96,7 +96,7 @@ namespace KKSpeech {
 
 		public static void GetSupportedLanguages() {
 			#if UNITY_IOS && !UNITY_EDITOR
-			return iOSSpeechRecognizer.SupportedLanguages();
+			iOSSpeechRecognizer.SupportedLanguages();
 			#elif UNITY_ANDROID && !UNITY_EDITOR
 			AndroidSpeechRecognizer.GetSupportedLanguages();
 			#endif
