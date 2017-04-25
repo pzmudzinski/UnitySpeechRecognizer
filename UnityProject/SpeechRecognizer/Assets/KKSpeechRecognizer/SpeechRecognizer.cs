@@ -16,6 +16,9 @@ namespace KKSpeech {
 
 	public struct SpeechRecognitionOptions {
 		public bool shouldCollectPartialResults;
+		public int? possiblyCompleteSilenceLengthMillis;
+		public int? completeSilenceLengthMillis;
+		public int? minimumLengthMillis;
 	}
 
 	public struct LanguageOption {
@@ -77,7 +80,7 @@ namespace KKSpeech {
 			#endif
 		}
 
-		private static void StartRecording(SpeechRecognitionOptions options) {
+		public static void StartRecording(SpeechRecognitionOptions options) {
 			#if UNITY_IOS && !UNITY_EDITOR
 			iOSSpeechRecognizer._StartRecording(options.shouldCollectPartialResults);
 			#elif UNITY_ANDROID && !UNITY_EDITOR
@@ -192,6 +195,18 @@ namespace KKSpeech {
 				var javaOptions = new AndroidJavaObject("kokosoft.unity.speechrecognition.SpeechRecognitionOptions");
 				javaOptions.Set<bool>("shouldCollectPartialResults", options.shouldCollectPartialResults);
 				javaOptions.Set<string>("languageID", DETECTION_LANGUAGE);
+
+				if (options.completeSilenceLengthMillis.HasValue) {
+					javaOptions.Set<int>("completeSilenceLengthMillis", options.completeSilenceLengthMillis.Value);
+				}
+
+				if (options.possiblyCompleteSilenceLengthMillis.HasValue) {
+					javaOptions.Set<int>("possiblyCompleteSilenceLengthMillis", options.possiblyCompleteSilenceLengthMillis.Value);
+				}
+
+				if (options.minimumLengthMillis.HasValue) {
+					javaOptions.Set<int>("minimumLengthMillis", options.minimumLengthMillis.Value);
+				}
 				return javaOptions;
 			}
 

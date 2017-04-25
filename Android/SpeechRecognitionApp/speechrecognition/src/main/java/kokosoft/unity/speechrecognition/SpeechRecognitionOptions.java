@@ -10,6 +10,10 @@ public class SpeechRecognitionOptions {
     public boolean shouldCollectPartialResults;
     public String languageID;
 
+    public int completeSilenceLengthMillis = -1;
+    public int minimumLengthMillis = -1;
+    public int possiblyCompleteSilenceLengthMillis = -1;
+
     public SpeechRecognitionOptions() {
 
     }
