@@ -106,6 +106,7 @@ public class SpeechRecognizerBridge {
     public static void GetSupportedLanguages() {
         try {
             Intent detailsIntent = new Intent(RecognizerIntent.ACTION_GET_LANGUAGE_DETAILS);
+            detailsIntent.setPackage("com.google.android.googlequicksearchbox");
             UnityPlayer.currentActivity.sendOrderedBroadcast(detailsIntent, null, languageDetailsChecker, null, Activity.RESULT_OK, null, null);
         }
         catch (Exception e){

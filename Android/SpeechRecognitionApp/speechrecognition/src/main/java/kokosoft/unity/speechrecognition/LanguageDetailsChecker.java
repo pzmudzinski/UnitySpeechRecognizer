@@ -3,6 +3,7 @@ package kokosoft.unity.speechrecognition;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.text.TextUtils;
@@ -43,7 +44,15 @@ public class LanguageDetailsChecker extends BroadcastReceiver
                 java.util.Collections.sort(ids);
                 List<LanguageOption> options = new ArrayList<>(ids.size());
 
-                Locale defaultLocale = UnityPlayer.currentActivity.getResources().getConfiguration().locale;
+                Locale defaultLocale ;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                {
+                    defaultLocale = UnityPlayer.currentActivity.getResources().getConfiguration().getLocales().get(0);
+                }else
+                {
+                    defaultLocale = UnityPlayer.currentActivity.getResources().getConfiguration().locale;
+                }
+
                 String displayName = "";
                 Locale parsedLocale;
 
