@@ -2,14 +2,23 @@ package kokosoft.unity.speechrecognition;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.unity3d.player.UnityPlayer;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -106,7 +115,13 @@ public class SpeechRecognizerBridge {
     public static void GetSupportedLanguages() {
         try {
             Intent detailsIntent = new Intent(RecognizerIntent.ACTION_GET_LANGUAGE_DETAILS);
-            UnityPlayer.currentActivity.sendOrderedBroadcast(detailsIntent, null, languageDetailsChecker, null, Activity.RESULT_OK, null, null);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            {
+                SpeechRecognizerBridge.sendImplicitOrderedBroadcast(UnityPlayer.currentActivity, detailsIntent, null, languageDetailsChecker, null, Activity.RESULT_OK, null, null);
+            } else {
+                UnityPlayer.currentActivity.sendOrderedBroadcast(detailsIntent, null, languageDetailsChecker, null, Activity.RESULT_OK, null, null);
+            }
+
         }
         catch (Exception e){
             Log.e("Unity", Log.getStackTraceString(e));
@@ -120,4 +135,32 @@ public class SpeechRecognizerBridge {
                 UnityPlayer.currentActivity.getPackageName());
         return permissionStatus;
     }
+
+    private static void sendImplicitOrderedBroadcast(Context context, Intent i, String receiverPermission,
+                                              BroadcastReceiver resultReceiver,
+                                              Handler scheduler, int initialCode,
+                                              String initialData,
+                                              Bundle initialExtras) {
+        PackageManager pm= context.getPackageManager();
+        List<ResolveInfo> matches=pm.queryBroadcastReceivers(i, 0);
+
+        Collections.sort(matches, new Comparator<ResolveInfo>() {
+            @Override
+            public int compare(ResolveInfo resolveInfo, ResolveInfo t1) {
+                return t1.filter.getPriority() - resolveInfo.filter.getPriority();
+            }
+        });
+
+        for (ResolveInfo resolveInfo : matches) {
+            Intent explicit=new Intent(i);
+            ComponentName cn=
+                    new ComponentName(resolveInfo.activityInfo.applicationInfo.packageName,
+                            resolveInfo.activityInfo.name);
+
+            explicit.setComponent(cn);
+            context.sendOrderedBroadcast(explicit, receiverPermission, resultReceiver,
+                    scheduler, initialCode, initialData, initialExtras);
+        }
+    }
+
 }

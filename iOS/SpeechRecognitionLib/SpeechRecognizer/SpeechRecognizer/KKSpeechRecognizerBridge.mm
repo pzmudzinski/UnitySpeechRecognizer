@@ -142,11 +142,18 @@ extern "C" {
     }
     
     void _StopIfRecording() {
-        [GetSpeechRecognizer() stopIfRecording];
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+        dispatch_async(queue, ^{
+            [GetSpeechRecognizer() stopIfRecording];
+        });
     }
     
     void _StartRecording(BOOL shouldCollectPartialResults) {
-        [GetSpeechRecognizer() startRecording:shouldCollectPartialResults];
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+        dispatch_async(queue, ^{
+             [GetSpeechRecognizer() startRecording:shouldCollectPartialResults];
+        });
+       
     }
 }
 
