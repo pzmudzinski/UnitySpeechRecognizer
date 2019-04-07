@@ -2,7 +2,9 @@
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.Callbacks;
+#if UNITY_IOS
 using UnityEditor.iOS.Xcode;
+#endif
 
 namespace KKSpeech {
 	
@@ -13,6 +15,7 @@ namespace KKSpeech {
 		[PostProcessBuild]
 		public static void OnPostProcessBuild(BuildTarget target, string path)
 		{
+			#if UNITY_IOS
 			if (shouldRun && target == BuildTarget.iOS)
 			{
 				// Get target for Xcode project
@@ -32,6 +35,7 @@ namespace KKSpeech {
 				File.WriteAllText(projPath, proj.WriteToString());
 
 			}
+			#endif
 		}
 	}
 }

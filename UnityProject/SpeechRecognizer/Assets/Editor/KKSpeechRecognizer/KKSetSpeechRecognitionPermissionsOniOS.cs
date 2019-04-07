@@ -2,7 +2,9 @@
 using UnityEditor;
 using UnityEditor.Callbacks;
 using System.Collections;
+#if UNITY_IOS
 using UnityEditor.iOS.Xcode;
+#endif
 using System.IO;
 
 namespace KKSpeech {
@@ -14,13 +16,15 @@ namespace KKSpeech {
 		public static string microphoneUsageDescription = "Microphone will be used in Speech Recognition.";
 		public static string speechRecognitionUsageDescription = "Speech Recognition will be used to let you talk to the app.";
 
+		#if UNITY_IOS
 		private static string nameOfPlist = "Info.plist";
 		private static string keyForMicrophoneUsage = "NSMicrophoneUsageDescription";
 		private static string keyForSpeechRecognitionUsage = "NSSpeechRecognitionUsageDescription";
+		#endif
 
 		[PostProcessBuild]
 		public static void ChangeXcodePlist(BuildTarget buildTarget, string pathToBuiltProject) {
-
+			#if UNITY_IOS
 			if (shouldRun && buildTarget == BuildTarget.iOS) {
 
 				// Get plist
@@ -37,6 +41,7 @@ namespace KKSpeech {
 				// Write to file
 				File.WriteAllText(plistPath, plist.WriteToString());
 			}
+			#endif
 		}
 	}
 }

@@ -31,8 +31,10 @@ namespace KKSpeech {
 	/*
 	 * check readme.pdf before using!
 	 */
+
 	public class SpeechRecognizer : System.Object {
 
+		#pragma warning disable CS0162 
 		public static bool ExistsOnDevice() {
 			#if UNITY_IOS && !UNITY_EDITOR
 			return iOSSpeechRecognizer._EngineExists();
@@ -109,8 +111,9 @@ namespace KKSpeech {
 			AndroidSpeechRecognizer.SetDetectionLanguage(languageID);
 			#endif
 		}
+		#pragma warning restore CS0162  
 
-
+		#if UNITY_IOS && !UNITY_EDITOR
 		private class iOSSpeechRecognizer {
 
 			[DllImport ("__Internal")]
@@ -145,7 +148,9 @@ namespace KKSpeech {
 				}
 			}
 		}
+		#endif
 
+		#if UNITY_ANDROID && !UNITY_EDITOR
 		private class AndroidSpeechRecognizer {
 
 			private static string DETECTION_LANGUAGE = null;
@@ -200,6 +205,7 @@ namespace KKSpeech {
 				return bridge;
 			}
 		}
+		#endif
 	}
 
 }
