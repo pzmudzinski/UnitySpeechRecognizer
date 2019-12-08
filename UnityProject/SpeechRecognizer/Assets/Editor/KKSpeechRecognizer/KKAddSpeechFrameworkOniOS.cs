@@ -24,16 +24,19 @@ namespace KKSpeech {
 				PBXProject proj = new PBXProject();
 				proj.ReadFromString(File.ReadAllText(projPath));
 
-				string targetName = PBXProject.GetUnityTargetName();
-				string projectTarget = proj.TargetGuidByName(targetName);
-
 				// Add dependencies
 				Debug.Log("KKSpeechRecognizer Unity: Adding Speech Framework");
 
-				proj.AddFrameworkToProject(projectTarget, "Speech.framework", true);
+				#if UNITY_2019_3_OR_NEWER
+					string targetName = proj.GetUnityFrameworkTargetGuid();
+					proj.AddFrameworkToProject(targetName, "Speech.framework", true);
+				#else
+					string targetName = PBXProject.GetUnityTargetName();
+					string projectTarget = proj.TargetGuidByName(targetName);
+					proj.AddFrameworkToProject(projectTarget, "Speech.framework", true);
+				#endif
 
 				File.WriteAllText(projPath, proj.WriteToString());
-
 			}
 			#endif
 		}
