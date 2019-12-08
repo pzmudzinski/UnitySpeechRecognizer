@@ -10,10 +10,6 @@
 #import "KKSpeechRecognizer.h"
 #import "UnitySpeechRecognizerDelegate.h"
 
-struct RecognitionOptions {
-    BOOL shouldCollectPartialResults;
-};
-
 extern "C" {
     void UnitySendMessage(const char* obj, const char* method, const char* msg);
 }
@@ -147,13 +143,20 @@ extern "C" {
             [GetSpeechRecognizer() stopIfRecording];
         });
     }
-    
-    void _StartRecording(BOOL shouldCollectPartialResults) {
+
+    void _StartRecording(char *contextWords, BOOL shouldCollectPartialResults) {
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
         dispatch_async(queue, ^{
-             [GetSpeechRecognizer() startRecording:shouldCollectPartialResults];
+            RecognitionOptions options = RecognitionOptions();
+            options.shouldCollectPartialResults = shouldCollectPartialResults;
+            if (contextWords != NULL) {
+                NSString *string = [NSString stringWithUTF8String:contextWords];
+                options.contextualStrings = [string componentsSeparatedByString:@","];
+            }
+
+            [GetSpeechRecognizer() startRecording:options];
         });
-       
+   
     }
 }
 

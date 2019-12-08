@@ -85,7 +85,7 @@ KKSpeechRecognitionAuthorizationStatus KKSpeechRecognitionAuthorizationStatusFro
     }];
 }
 
-- (void)startRecording:(BOOL)collectPartialResults {
+- (void)startRecording:(RecognitionOptions)options {
     if (_recognitionTask != nil) {
         [_recognitionTask cancel];
         _recognitionTask = nil;
@@ -116,7 +116,11 @@ KKSpeechRecognitionAuthorizationStatus KKSpeechRecognitionAuthorizationStatusFro
         return;
     }
     
-    _recognitionRequest.shouldReportPartialResults = collectPartialResults;
+    _recognitionRequest.shouldReportPartialResults = options.shouldCollectPartialResults;
+    
+    if (options.contextualStrings != nil) {
+        _recognitionRequest.contextualStrings = options.contextualStrings;
+    }
     
     _recognitionTask = [_internalRecognizer recognitionTaskWithRequest:_recognitionRequest resultHandler:^(SFSpeechRecognitionResult * _Nullable result, NSError * _Nullable error) {
         

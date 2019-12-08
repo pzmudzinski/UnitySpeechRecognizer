@@ -10,6 +10,13 @@
 
 #import <Speech/Speech.h>
 
+struct RecognitionOptions {
+    BOOL shouldCollectPartialResults;
+    NSArray<NSString*> *contextualStrings;
+};
+
+typedef struct RecognitionOptions RecognitionOptions;
+
 @class KKSpeechRecognizer;
 @protocol KKSpeechRecognizerDelegate<NSObject>
 
@@ -60,7 +67,7 @@ typedef void (^AuthCallback)(KKSpeechRecognitionAuthorizationStatus);
 - (instancetype)initWithLocale:(NSLocale*)locale;
 
 + (void)requestAuthorization:(AuthCallback)callback;
-- (void)startRecording:(BOOL)collectPartialResults;
+- (void)startRecording:(RecognitionOptions)options;
 - (void)stopIfRecording;
 
 

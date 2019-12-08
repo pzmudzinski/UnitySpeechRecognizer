@@ -71,7 +71,10 @@ public class RecordingCanvas : MonoBehaviour {
 			SpeechRecognizer.StopIfRecording();
 			startRecordingButton.GetComponentInChildren<Text>().text = "Start Recording";
 		} else {
-			SpeechRecognizer.StartRecording(true);
+			var options = new SpeechRecognitionOptions();
+			options.shouldCollectPartialResults = true;
+			options.contextWords = new string[] { "uruk-hai", "saruman", "frodo" };
+			SpeechRecognizer.StartRecording(options);
 			startRecordingButton.GetComponentInChildren<Text>().text = "Stop Recording";
 			resultText.text = "Say something :-)";
 		}

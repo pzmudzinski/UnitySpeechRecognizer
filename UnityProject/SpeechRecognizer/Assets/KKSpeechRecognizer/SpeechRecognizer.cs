@@ -16,6 +16,7 @@ namespace KKSpeech {
 
 	public struct SpeechRecognitionOptions {
 		public bool shouldCollectPartialResults;
+		public string[] contextWords;
 	}
 
 	public struct LanguageOption {
@@ -79,9 +80,15 @@ namespace KKSpeech {
 			#endif
 		}
 
-		private static void StartRecording(SpeechRecognitionOptions options) {
+		public static void StartRecording(SpeechRecognitionOptions options) {
 			#if UNITY_IOS && !UNITY_EDITOR
-			iOSSpeechRecognizer._StartRecording(options.shouldCollectPartialResults);
+			if (options.contextWords != null) {
+				iOSSpeechRecognizer._StartRecording(options.contextWords, options.shouldCollectPartialResults);
+			} else {
+				iOSSpeechRecognizer._StartRecording(null, options.shouldCollectPartialResults);
+			}
+
+			
 			#elif UNITY_ANDROID && !UNITY_EDITOR
 			AndroidSpeechRecognizer.StartRecording(options);
 			#endif
@@ -90,7 +97,7 @@ namespace KKSpeech {
 		public static void StartRecording(bool shouldCollectPartialResults) {
 			Debug.Log("StartRecording...");
 			#if UNITY_IOS && !UNITY_EDITOR
-			iOSSpeechRecognizer._StartRecording(shouldCollectPartialResults);
+			iOSSpeechRecognizer._StartRecording(ref null, shouldCollectPartialResults);
 			#elif UNITY_ANDROID && !UNITY_EDITOR
 			AndroidSpeechRecognizer.StartRecording(shouldCollectPartialResults);
 			#endif
@@ -138,7 +145,7 @@ namespace KKSpeech {
 			internal static extern void _StopIfRecording();
 
 			[DllImport ("__Internal")]
-			internal static extern void _StartRecording(bool shouldCollectPartialResults);
+			internal static extern void _StartRecording(ref string[] contextWords, bool shouldCollectPartialResults);
 
 			public static void SupportedLanguages() {
 				string formattedLangs = _SupportedLanguages();
