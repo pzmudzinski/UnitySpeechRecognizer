@@ -93,6 +93,19 @@ KKSpeechRecognizer* GetSpeechRecognizer() {
     return speechRecognizer;
 }
 
+NSString *StringFromKKSpeechRecognitionAuthorizationStatus(KKSpeechRecognitionAuthorizationStatus status) {
+    switch (status) {
+        case KKSpeechRecognitionAuthorizationStatusDenied:
+            return @"denied";
+        case KKSpeechRecognitionAuthorizationStatusAuthorized:
+            return @"authorized";
+        case KKSpeechRecognitionAuthorizationStatusRestricted:
+            return @"restricted";
+        case KKSpeechRecognitionAuthorizationStatusNotDetermined:
+            return @"notDetermined";
+    }
+}
+
 extern "C" {
     
     void _SetDetectionLanguage(char *langID) {
