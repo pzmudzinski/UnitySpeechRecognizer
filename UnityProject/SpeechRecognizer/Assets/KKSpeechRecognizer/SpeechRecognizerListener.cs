@@ -34,6 +34,7 @@ namespace KKSpeech {
 		public ErrorCallback onErrorOnStartRecording = new ErrorCallback();
 		// Android-only
 		public UnityEvent onEndOfSpeech = new UnityEvent();
+        public UnityEvent onReadyForSpeech = new UnityEvent();
 
 		void AvailabilityDidChange(string available) {
 			Debug.Log("AvailabilityDidChange " + available);
@@ -78,6 +79,11 @@ namespace KKSpeech {
 			Debug.Log("End Of Speech");
 			onEndOfSpeech.Invoke();
 		}
+
+        void OnReadyForSpeech(string dummy) {
+            Debug.Log("Ready For Speech");
+            onReadyForSpeech.Invoke();
+        }
 
 		void AuthorizationStatusFetched(string status) {
 			Debug.Log("AuthorizationStatusFetched" + status);

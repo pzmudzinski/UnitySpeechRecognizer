@@ -26,6 +26,11 @@ public class SendToUnitySpeechRecognizerListener implements KKSpeechRecognizer.K
     }
 
     @Override
+    public void onReadyForSpeech() {
+        sendToUnity("OnReadyForSpeech", "");
+    }
+
+    @Override
     public void gotPartialResult(String result) {
         sendToUnity("GotPartialResult", result);
     }

@@ -25,6 +25,7 @@ public class KKSpeechRecognizer implements RecognitionListener {
         void gotPartialResult(String result);
         void gotFinalResult(String result);
         void onEndOfSpeech();
+        void onReadyForSpeech();
     }
 
     public static boolean isRecognitionAvailable(Context context) {
@@ -86,6 +87,9 @@ public class KKSpeechRecognizer implements RecognitionListener {
     @Override
     public void onReadyForSpeech(Bundle params) {
         Log.i(TAG, "onReadyForSpeech");
+        if (mListener != null) {
+            mListener.onReadyForSpeech();
+        }
     }
 
     @Override
