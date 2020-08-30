@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Android-SpeechRecognitionApp.iml" filepath="$PROJECT_DIR$/.idea/modules/Android-SpeechRecognitionApp.iml" group="SpeechRecognitionApp" />
       <module fileurl="file://$PROJECT_DIR$/SpeechRecognitionApp.iml" filepath="$PROJECT_DIR$/SpeechRecognitionApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/SpeechRecognitionApp-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/SpeechRecognitionApp-app.iml" group="SpeechRecognitionApp/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/speechrecognition/SpeechRecognitionApp-speechrecognition.iml" filepath="$PROJECT_DIR$/.idea/modules/speechrecognition/SpeechRecognitionApp-speechrecognition.iml" group="SpeechRecognitionApp/speechrecognition" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/speechrecognition/speechrecognition.iml" filepath="$PROJECT_DIR$/speechrecognition/speechrecognition.iml" />
     </modules>

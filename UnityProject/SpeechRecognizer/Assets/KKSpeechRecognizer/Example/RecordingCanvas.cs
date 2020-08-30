@@ -18,12 +18,12 @@ public class RecordingCanvas : MonoBehaviour {
 			listener.onFinalResults.AddListener(OnFinalResult);
 			listener.onPartialResults.AddListener(OnPartialResult);
 			listener.onEndOfSpeech.AddListener(OnEndOfSpeech);
-			startRecordingButton.enabled = false;
 			SpeechRecognizer.RequestAccess();
 		} else {
 			resultText.text = "Sorry, but this device doesn't support speech recognition";
 			startRecordingButton.enabled = false;
 		}
+
 
 	}
 

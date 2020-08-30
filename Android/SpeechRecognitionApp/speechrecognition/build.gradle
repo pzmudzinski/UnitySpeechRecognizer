@@ -1,12 +1,11 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion "27.0.3"
+    compileSdkVersion 30
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 24
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
@@ -31,19 +30,27 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:27.1.1'
-    testCompile 'junit:junit:4.12'
+    api 'com.android.support:appcompat-v7:27.1.1'
+    testImplementation 'junit:junit:4.12'
 }
 
-task clearJar(type: Delete) {
-    delete 'build/outputs/KKSpeechRecognizer.jar'
+task deleteJar(type: Delete) {
+    delete 'libs/KKSpeechRecognizer.jar'
 }
 
-task makeJar(type: Copy) {
-    from('build/intermediates/bundles/release/')
-    into('build/outputs/')
+task createJar(type: Copy) {
+    from('build/intermediates/aar_main_jar/release/')
+    into('libs/jars/')
     include('classes.jar')
-    rename ('classes.jar', 'KKSpeechRecognizer.jar')
+    rename('classes.jar', 'KKSpeechRecognizer.jar')
 }
 
-makeJar.dependsOn(clearJar, build)
+task copyToUnity(type: Copy) {
+    from('libs/jars')
+    into('../../UnityProject/SpeechRecognizer/Assets/Plugins/Android/')
+    include('KKSpeechRecognizer.jar')
+}
+
+createJar.dependsOn(deleteJar, build)
+
+copyToUnity.dependsOn(createJar)

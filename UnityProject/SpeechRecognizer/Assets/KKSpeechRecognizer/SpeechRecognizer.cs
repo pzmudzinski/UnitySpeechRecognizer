@@ -4,6 +4,9 @@ using System.Runtime.InteropServices;
 using UnityEngine.Events;
 using System.Text;
 using System.Collections.Generic;
+#if PLATFORM_ANDROID
+using UnityEngine.Android;
+#endif
 
 namespace KKSpeech {
 	
@@ -48,7 +51,10 @@ namespace KKSpeech {
 			#if UNITY_IOS && !UNITY_EDITOR
 			iOSSpeechRecognizer._RequestAccess();
 			#elif UNITY_ANDROID && !UNITY_EDITOR
-			AndroidSpeechRecognizer.RequestAccess();
+  		if (!Permission.HasUserAuthorizedPermission(Permission.Microphone))
+  		{
+     		Permission.RequestUserPermission(Permission.Microphone);
+  		}
 			#endif
 		}
 
