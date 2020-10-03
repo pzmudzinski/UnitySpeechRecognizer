@@ -119,8 +119,9 @@ KKSpeechRecognitionAuthorizationStatus KKSpeechRecognitionAuthorizationStatusFro
     _recognitionRequest.shouldReportPartialResults = collectPartialResults;
     
     _recognitionTask = [_internalRecognizer recognitionTaskWithRequest:_recognitionRequest resultHandler:^(SFSpeechRecognitionResult * _Nullable result, NSError * _Nullable error) {
-        
+        BOOL isFinal = NO;
         if (result != nil) {
+            isFinal = result.isFinal;
             if (result.isFinal) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [_delegate speechRecognizer:self gotFinalResult:result.bestTranscription.formattedString];
@@ -132,11 +133,19 @@ KKSpeechRecognitionAuthorizationStatus KKSpeechRecognitionAuthorizationStatusFro
             }
         }
         
-        if (error != nil) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [_delegate speechRecognizer:self failedDuringRecordingWithReason:[NSString stringWithFormat:@"%@", error.userInfo]];
-            });
-            [self stopRecording];
+        if (error != nil || isFinal) {
+            if (error != nil) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [_delegate speechRecognizer:self failedDuringRecordingWithReason:[NSString stringWithFormat:@"%@", error]];
+                });
+            }
+//
+            [_audioEngine stop];
+            [inputNode removeTapOnBus:0];
+            
+            _recognitionRequest = nil;
+            _recognitionTask = nil;
+            // [self stopRecording];
         }
     }];
     
@@ -165,11 +174,11 @@ KKSpeechRecognitionAuthorizationStatus KKSpeechRecognitionAuthorizationStatusFro
 
 - (void)stopRecording {
     [_audioEngine stop];
-    [_audioEngine.inputNode removeTapOnBus:0];
-    
+//    [_audioEngine.inputNode removeTapOnBus:0];
+
     [_recognitionRequest endAudio];
-    _recognitionRequest = nil;
-    _recognitionTask = nil;
+//    _recognitionRequest = nil;
+//    _recognitionTask = nil;
     
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
     if (_defaultAudioSessionCategory) {
