@@ -147,6 +147,12 @@ public class SpeechRecognizerBridge {
         Collections.sort(matches, new Comparator<ResolveInfo>() {
             @Override
             public int compare(ResolveInfo resolveInfo, ResolveInfo t1) {
+                if (resolveInfo == null || resolveInfo.filter == null) {
+                    return -1;
+                }
+                if (t1 == null || t1.filter == null) {
+                    return 1;
+                }
                 return t1.filter.getPriority() - resolveInfo.filter.getPriority();
             }
         });

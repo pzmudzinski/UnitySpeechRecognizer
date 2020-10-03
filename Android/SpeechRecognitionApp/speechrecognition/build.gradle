@@ -26,8 +26,8 @@ android {
 }
 
 dependencies {
-    provided files('./libs/UnityPlayer.jar')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    compileOnly files('./libs/UnityPlayer.jar')
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     api 'com.android.support:appcompat-v7:27.1.1'
@@ -35,7 +35,7 @@ dependencies {
 }
 
 task deleteJar(type: Delete) {
-    delete 'libs/KKSpeechRecognizer.jar'
+    delete 'libs/jars/KKSpeechRecognizer.jar'
 }
 
 task createJar(type: Copy) {
@@ -47,7 +47,7 @@ task createJar(type: Copy) {
 
 task copyToUnity(type: Copy) {
     from('libs/jars')
-    into('../../UnityProject/SpeechRecognizer/Assets/Plugins/Android/')
+    into('../../../UnityProject/SpeechRecognizer/Assets/Plugins/Android/')
     include('KKSpeechRecognizer.jar')
 }
 
