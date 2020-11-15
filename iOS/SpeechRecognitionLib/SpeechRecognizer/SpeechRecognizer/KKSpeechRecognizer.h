@@ -7,8 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-
 #import <Speech/Speech.h>
+#import "RecognitionOptions.h"
 
 @class KKSpeechRecognizer;
 @protocol KKSpeechRecognizerDelegate<NSObject>
@@ -47,7 +47,7 @@ typedef void (^AuthCallback)(KKSpeechRecognitionAuthorizationStatus);
 - (instancetype)initWithLocale:(NSLocale*)locale;
 
 + (void)requestAuthorization:(AuthCallback)callback;
-- (void)startRecording:(BOOL)collectPartialResults;
+- (void)startRecording:(RecognitionOptions)options;
 - (void)stopIfRecording;
 
 

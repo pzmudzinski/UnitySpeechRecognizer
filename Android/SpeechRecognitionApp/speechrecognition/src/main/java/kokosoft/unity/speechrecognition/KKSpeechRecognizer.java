@@ -81,6 +81,14 @@ public class KKSpeechRecognizer implements RecognitionListener {
         }
         intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
 
+        if (options.possiblyCompleteSilenceLengthMillis != null) {
+            intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, options.possiblyCompleteSilenceLengthMillis);
+        }
+
+        if (options.completeSilenceLengthMillis != null) {
+            intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, options.completeSilenceLengthMillis);
+        }
+
         return intent;
     }
 

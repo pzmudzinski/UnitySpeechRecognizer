@@ -7,6 +7,9 @@
 //
 
 #import "KKSpeechRecognizer.h"
+#import <UIKit/UIKit.h>
+
+#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 
 KKSpeechRecognitionAuthorizationStatus KKSpeechRecognitionAuthorizationStatusFromSF(SFSpeechRecognizerAuthorizationStatus sfStatus) {
     switch (sfStatus) {
@@ -85,7 +88,7 @@ KKSpeechRecognitionAuthorizationStatus KKSpeechRecognitionAuthorizationStatusFro
     }];
 }
 
-- (void)startRecording:(BOOL)collectPartialResults {
+- (void)startRecording:(RecognitionOptions)options {
     if (_recognitionTask != nil) {
         [_recognitionTask cancel];
         _recognitionTask = nil;
@@ -116,7 +119,10 @@ KKSpeechRecognitionAuthorizationStatus KKSpeechRecognitionAuthorizationStatusFro
         return;
     }
     
-    _recognitionRequest.shouldReportPartialResults = collectPartialResults;
+    _recognitionRequest.shouldReportPartialResults = options.shouldCollectPartialResults;
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"13.0")) {
+        _recognitionRequest.requiresOnDeviceRecognition = options.requiresOnDeviceRecognition;
+    }
     
     _recognitionTask = [_internalRecognizer recognitionTaskWithRequest:_recognitionRequest resultHandler:^(SFSpeechRecognitionResult * _Nullable result, NSError * _Nullable error) {
         BOOL isFinal = NO;
