@@ -27,6 +27,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		AE4C861525614EAA00F65E55 /* RecognitionOptions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RecognitionOptions.h; sourceTree = "<group>"; };
 		AE8A87041DA1C854005E2365 /* KKSpeechRecognizerBridge.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = KKSpeechRecognizerBridge.mm; sourceTree = "<group>"; };
 		AE8A87071DA1CA5C005E2365 /* Speech.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Speech.framework; path = System/Library/Frameworks/Speech.framework; sourceTree = SDKROOT; };
 		AE8A870A1DA24F87005E2365 /* UnitySpeechRecognizerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnitySpeechRecognizerDelegate.h; sourceTree = "<group>"; };
@@ -80,6 +81,7 @@
 				AE8A87041DA1C854005E2365 /* KKSpeechRecognizerBridge.mm */,
 				AE8A870A1DA24F87005E2365 /* UnitySpeechRecognizerDelegate.h */,
 				AE8A870B1DA24F87005E2365 /* UnitySpeechRecognizerDelegate.m */,
+				AE4C861525614EAA00F65E55 /* RecognitionOptions.h */,
 			);
 			path = SpeechRecognizer;
 			sourceTree = "<group>";
@@ -126,6 +128,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = AEDD8D2F1DA1BFD600106635;

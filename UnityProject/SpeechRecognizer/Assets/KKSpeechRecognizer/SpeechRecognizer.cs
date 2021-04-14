@@ -4,116 +4,158 @@ using System.Runtime.InteropServices;
 using UnityEngine.Events;
 using System.Text;
 using System.Collections.Generic;
+#if PLATFORM_ANDROID
+using UnityEngine.Android;
+#endif
 
-namespace KKSpeech {
-	
-	public enum AuthorizationStatus {
-		Authorized,
-		Denied,
-		NotDetermined,
-		Restricted
-	}
+namespace KKSpeech
+{
 
-	public struct SpeechRecognitionOptions {
-		public bool shouldCollectPartialResults;
-	}
+  public enum AuthorizationStatus
+  {
+    Authorized,
+    Denied,
+    NotDetermined,
+    Restricted
+  }
 
-	public struct LanguageOption {
-		public readonly string id;
-		public readonly string displayName;
+  public struct SpeechRecognitionOptions
+  {
+    public bool shouldCollectPartialResults;
+    // see: https://developer.android.com/reference/android/speech/RecognizerIntent#EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS
+    public int? completeSilenceLengthMillis;
+    // see: https://developer.android.com/reference/android/speech/RecognizerIntent#EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS
+    public int? possiblyCompleteSilenceLengthMillis;
+    // see: https://developer.apple.com/documentation/speech/sfspeechrecognitionrequest/3152603-requiresondevicerecognition?language=objc
+    public bool requiresOnDeviceRecognition;
+  }
 
-		public LanguageOption(string id, string displayName) {
-			this.id = id;
-			this.displayName = displayName;
-		}
-	}
+  public struct LanguageOption
+  {
+    public readonly string id;
+    public readonly string displayName;
 
-	/*
+    public LanguageOption(string id, string displayName)
+    {
+      this.id = id;
+      this.displayName = displayName;
+    }
+  }
+
+  /*
 	 * check readme.pdf before using!
 	 */
 
-	public class SpeechRecognizer : System.Object {
+  public class SpeechRecognizer : System.Object
+  {
 
-		#pragma warning disable CS0162 
-		public static bool ExistsOnDevice() {
-			#if UNITY_IOS && !UNITY_EDITOR
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct iOSSpeechRecognitionOptions
+    {
+      [MarshalAs(UnmanagedType.U1)]
+      public bool shouldCollectPartialResults;
+      [MarshalAs(UnmanagedType.U1)]
+      public bool requiresOnDeviceRecognition;
+    }
+
+#pragma warning disable CS0162
+    public static bool ExistsOnDevice()
+    {
+#if UNITY_IOS && !UNITY_EDITOR
 			return iOSSpeechRecognizer._EngineExists();
-			#elif UNITY_ANDROID && !UNITY_EDITOR
+#elif UNITY_ANDROID && !UNITY_EDITOR
 			return AndroidSpeechRecognizer.EngineExists();
-			#endif
-			return false; // sorry, no support besides Android and iOS :-(
-		}
+#endif
+      return false; // sorry, no support besides Android and iOS :-(
+    }
 
-		public static void RequestAccess() {
-			#if UNITY_IOS && !UNITY_EDITOR
+    public static void RequestAccess()
+    {
+#if UNITY_IOS && !UNITY_EDITOR
 			iOSSpeechRecognizer._RequestAccess();
-			#elif UNITY_ANDROID && !UNITY_EDITOR
-			AndroidSpeechRecognizer.RequestAccess();
-			#endif
-		}
+#elif UNITY_ANDROID && !UNITY_EDITOR
+  		if (!Permission.HasUserAuthorizedPermission(Permission.Microphone))
+  		{
+     		Permission.RequestUserPermission(Permission.Microphone);
+  		}
+#endif
+    }
 
-		public static bool IsRecording() {
-			#if UNITY_IOS && !UNITY_EDITOR
+    public static bool IsRecording()
+    {
+#if UNITY_IOS && !UNITY_EDITOR
 			return iOSSpeechRecognizer._IsRecording();
-			#elif UNITY_ANDROID && !UNITY_EDITOR
+#elif UNITY_ANDROID && !UNITY_EDITOR
 			return AndroidSpeechRecognizer.IsRecording();
-			#endif
-			return false;
-		}
+#endif
+      return false;
+    }
 
-		public static AuthorizationStatus GetAuthorizationStatus() {
-			#if UNITY_IOS && !UNITY_EDITOR
+    public static AuthorizationStatus GetAuthorizationStatus()
+    {
+#if UNITY_IOS && !UNITY_EDITOR
 			return (AuthorizationStatus)iOSSpeechRecognizer._AuthorizationStatus();
-			#elif UNITY_ANDROID && !UNITY_EDITOR
+#elif UNITY_ANDROID && !UNITY_EDITOR
 			return (AuthorizationStatus)AndroidSpeechRecognizer.AuthorizationStatus();
-			#endif
-			return AuthorizationStatus.NotDetermined;
-		}
+#endif
+      return AuthorizationStatus.NotDetermined;
+    }
 
-		public static void StopIfRecording() {
-			Debug.Log("StopRecording...");
-			#if UNITY_IOS && !UNITY_EDITOR
+    public static void StopIfRecording()
+    {
+      Debug.Log("StopRecording...");
+#if UNITY_IOS && !UNITY_EDITOR
 			iOSSpeechRecognizer._StopIfRecording();
-			#elif UNITY_ANDROID && !UNITY_EDITOR
+#elif UNITY_ANDROID && !UNITY_EDITOR
 			AndroidSpeechRecognizer.StopIfRecording();
-			#endif
-		}
+#endif
+    }
 
-		private static void StartRecording(SpeechRecognitionOptions options) {
-			#if UNITY_IOS && !UNITY_EDITOR
-			iOSSpeechRecognizer._StartRecording(options.shouldCollectPartialResults);
-			#elif UNITY_ANDROID && !UNITY_EDITOR
-			AndroidSpeechRecognizer.StartRecording(options);
-			#endif
-		}
+    public static void StartRecording(SpeechRecognitionOptions options)
+    {
+#if UNITY_IOS && !UNITY_EDITOR
+      iOSSpeechRecognitionOptions iosOptions = new iOSSpeechRecognitionOptions();
+      iosOptions.requiresOnDeviceRecognition = options.requiresOnDeviceRecognition;
+      iosOptions.shouldCollectPartialResults = options.shouldCollectPartialResults;
+      iOSSpeechRecognizer._StartRecording(iosOptions);
+#elif UNITY_ANDROID && !UNITY_EDITOR
+      AndroidSpeechRecognizer.StartRecording(options);
+#endif
+    }
 
-		public static void StartRecording(bool shouldCollectPartialResults) {
-			Debug.Log("StartRecording...");
-			#if UNITY_IOS && !UNITY_EDITOR
-			iOSSpeechRecognizer._StartRecording(shouldCollectPartialResults);
-			#elif UNITY_ANDROID && !UNITY_EDITOR
+    public static void StartRecording(bool shouldCollectPartialResults)
+    {
+      Debug.Log("StartRecording...");
+#if UNITY_IOS && !UNITY_EDITOR
+      iOSSpeechRecognitionOptions iosOptions = new iOSSpeechRecognitionOptions();
+      iosOptions.shouldCollectPartialResults = shouldCollectPartialResults;
+      iOSSpeechRecognizer._StartRecording(iosOptions);
+#elif UNITY_ANDROID && !UNITY_EDITOR
 			AndroidSpeechRecognizer.StartRecording(shouldCollectPartialResults);
-			#endif
-		}
+#endif
+    }
 
-		public static void GetSupportedLanguages() {
-			#if UNITY_IOS && !UNITY_EDITOR
+    public static void GetSupportedLanguages()
+    {
+#if UNITY_IOS && !UNITY_EDITOR
 			iOSSpeechRecognizer.SupportedLanguages();
-			#elif UNITY_ANDROID && !UNITY_EDITOR
+#elif UNITY_ANDROID && !UNITY_EDITOR
 			AndroidSpeechRecognizer.GetSupportedLanguages();
-			#endif
-		}
+#endif
+    }
 
-		public static void SetDetectionLanguage(string languageID) {
-			#if UNITY_IOS && !UNITY_EDITOR
+    public static void SetDetectionLanguage(string languageID)
+    {
+#if UNITY_IOS && !UNITY_EDITOR
 			iOSSpeechRecognizer._SetDetectionLanguage(languageID);
-			#elif UNITY_ANDROID && !UNITY_EDITOR
+#elif UNITY_ANDROID && !UNITY_EDITOR
 			AndroidSpeechRecognizer.SetDetectionLanguage(languageID);
-			#endif
-		}
-		#pragma warning restore CS0162  
+#endif
+    }
+#pragma warning restore CS0162
 
-		#if UNITY_IOS && !UNITY_EDITOR
+#if UNITY_IOS && !UNITY_EDITOR
 		private class iOSSpeechRecognizer {
 
 			[DllImport ("__Internal")]
@@ -138,7 +180,7 @@ namespace KKSpeech {
 			internal static extern void _StopIfRecording();
 
 			[DllImport ("__Internal")]
-			internal static extern void _StartRecording(bool shouldCollectPartialResults);
+			internal static extern void _StartRecording(iOSSpeechRecognitionOptions options);
 
 			public static void SupportedLanguages() {
 				string formattedLangs = _SupportedLanguages();
@@ -148,9 +190,9 @@ namespace KKSpeech {
 				}
 			}
 		}
-		#endif
+#endif
 
-		#if UNITY_ANDROID && !UNITY_EDITOR
+#if UNITY_ANDROID && !UNITY_EDITOR
 		private class AndroidSpeechRecognizer {
 
 			private static string DETECTION_LANGUAGE = null;
@@ -197,6 +239,15 @@ namespace KKSpeech {
 				var javaOptions = new AndroidJavaObject("kokosoft.unity.speechrecognition.SpeechRecognitionOptions");
 				javaOptions.Set<bool>("shouldCollectPartialResults", options.shouldCollectPartialResults);
 				javaOptions.Set<string>("languageID", DETECTION_LANGUAGE);
+
+				if (options.possiblyCompleteSilenceLengthMillis.HasValue) {
+					javaOptions.Set<int>("possiblyCompleteSilenceLengthMillis", options.possiblyCompleteSilenceLengthMillis.Value);
+				}
+
+				if (options.completeSilenceLengthMillis.HasValue) {
+					javaOptions.Set<int>("completeSilenceLengthMillis", options.completeSilenceLengthMillis.Value);
+				}
+
 				return javaOptions;
 			}
 
@@ -205,8 +256,8 @@ namespace KKSpeech {
 				return bridge;
 			}
 		}
-		#endif
-	}
+#endif
+  }
 
 }
 

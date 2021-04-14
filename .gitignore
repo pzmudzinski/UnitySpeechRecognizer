@@ -1,2 +1,7 @@
 speech_recognizer_xcode_2017/
 speech_recognizer_xcode_2017.app
+.DS_Store
+iOS/SpeechRecognitionLib/SpeechRecognizer/.DS_Store
+UnityProject/SpeechRecognizer/.DS_Store
+UnityProject/SpeechRecognizer/Assets/.DS_Store
+UnityProject/SpeechRecognizer/Assets/Plugins/.DS_Store

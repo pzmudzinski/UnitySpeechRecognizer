@@ -7,6 +7,9 @@
 //
 
 #import "KKSpeechRecognizer.h"
+#import <UIKit/UIKit.h>
+
+#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
 
 KKSpeechRecognitionAuthorizationStatus KKSpeechRecognitionAuthorizationStatusFromSF(SFSpeechRecognizerAuthorizationStatus sfStatus) {
     switch (sfStatus) {
@@ -85,7 +88,7 @@ KKSpeechRecognitionAuthorizationStatus KKSpeechRecognitionAuthorizationStatusFro
     }];
 }
 
-- (void)startRecording:(BOOL)collectPartialResults {
+- (void)startRecording:(RecognitionOptions)options {
     if (_recognitionTask != nil) {
         [_recognitionTask cancel];
         _recognitionTask = nil;
@@ -116,11 +119,15 @@ KKSpeechRecognitionAuthorizationStatus KKSpeechRecognitionAuthorizationStatusFro
         return;
     }
     
-    _recognitionRequest.shouldReportPartialResults = collectPartialResults;
+    _recognitionRequest.shouldReportPartialResults = options.shouldCollectPartialResults;
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"13.0")) {
+        _recognitionRequest.requiresOnDeviceRecognition = options.requiresOnDeviceRecognition;
+    }
     
     _recognitionTask = [_internalRecognizer recognitionTaskWithRequest:_recognitionRequest resultHandler:^(SFSpeechRecognitionResult * _Nullable result, NSError * _Nullable error) {
-        
+        BOOL isFinal = NO;
         if (result != nil) {
+            isFinal = result.isFinal;
             if (result.isFinal) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [_delegate speechRecognizer:self gotFinalResult:result.bestTranscription.formattedString];
@@ -132,11 +139,19 @@ KKSpeechRecognitionAuthorizationStatus KKSpeechRecognitionAuthorizationStatusFro
             }
         }
         
-        if (error != nil) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [_delegate speechRecognizer:self failedDuringRecordingWithReason:[NSString stringWithFormat:@"%@", error.userInfo]];
-            });
-            [self stopRecording];
+        if (error != nil || isFinal) {
+            if (error != nil) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [_delegate speechRecognizer:self failedDuringRecordingWithReason:[NSString stringWithFormat:@"%@", error]];
+                });
+            }
+//
+            [_audioEngine stop];
+            [inputNode removeTapOnBus:0];
+            
+            _recognitionRequest = nil;
+            _recognitionTask = nil;
+            // [self stopRecording];
         }
     }];
     
@@ -165,11 +180,11 @@ KKSpeechRecognitionAuthorizationStatus KKSpeechRecognitionAuthorizationStatusFro
 
 - (void)stopRecording {
     [_audioEngine stop];
-    [_audioEngine.inputNode removeTapOnBus:0];
-    
+//    [_audioEngine.inputNode removeTapOnBus:0];
+
     [_recognitionRequest endAudio];
-    _recognitionRequest = nil;
-    _recognitionTask = nil;
+//    _recognitionRequest = nil;
+//    _recognitionTask = nil;
     
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
     if (_defaultAudioSessionCategory) {
