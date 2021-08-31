@@ -98,7 +98,7 @@ KKSpeechRecognitionAuthorizationStatus KKSpeechRecognitionAuthorizationStatusFro
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
     _defaultAudioSessionCategory = audioSession.category;
     [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:&error];
-    [audioSession setMode:AVAudioSessionModeMeasurement error:&error];
+    [audioSession setMode:AVAudioSessionModeDefault error:&error];
     [audioSession setActive:YES error:&error];
     
     if (error != nil) {
